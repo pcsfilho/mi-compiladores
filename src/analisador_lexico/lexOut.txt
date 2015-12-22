@@ -1,0 +1,30 @@
+Erro Lexico Numero mal formado com caracter Invalido 1.ab1b23 Linha 1
+Erro Lexico Numero mal formado com caracter Invalido 1.11a234 Linha 2
+Erro Lexico Numero mal formado com caracter Invalido 1.. Linha 3
+Erro Lexico Numero mal formado com caracter Invalido 1.ab1b23 Linha 4
+TOKEN#OP#+#4
+Erro Lexico Numero mal formado com caracter Invalido 1.11a234 Linha 4
+TOKEN#DEL#;#4
+Erro Lexico Numero mal formado com caracter Invalido 1.11a234 Linha 5
+TOKEN#OP#+#5
+Erro Lexico Numero mal formado com caracter Invalido 1.11a234 Linha 5
+TOKEN#DEL#;#5
+Erro Lexico Numero mal formado com caracter Invalido 1. Linha 6
+TOKEN#OP#+#6
+TOKEN#NUM_I#2r#6
+Erro Lexico Numero mal formado com caracter invalido 12er Linha 7
+TOKEN#OP#+#7
+TOKEN#NUM_I#14;#7
+Erro Lexico Numero mal formado com caracter invalido 23er Linha 8
+TOKEN#OP#+#8
+TOKEN#NUM_I#123;#8
+Erro Lexico Numero mal formado com caracter invalido 123rt! Linha 9
+TOKEN#OP#+#9
+Erro Lexico Caracter Invalido ! Linha 9
+TOKEN#ID#er#9
+TOKEN#DEL#;#9
+Erro Lexico Numero mal formado com caracter Invalido 2.2.2.2.2 Linha 10
+Erro Lexico Numero mal formado com caracter Invalido 2.2. Linha 11
+Erro Lexico Numero mal formado com caracter Invalido 2.2. Linha 12
+TOKEN#OP#+#12
+TOKEN#NUM_I#45#13
