@@ -41,7 +41,7 @@ Arquivos presentes
 | Dígito                               | 0..9                                        |
 | Símbolo                              | ASCII de 33 a 126                               |
 | Cadeia Constante                     | ```"(Letra|Dígito|Símbolo (exceto 34))*"```            |
-| Caractere Constante                  | '(Letra|Dígito)'           |
+| Caractere Constante                  | ```'(Letra|Dígito)'```           |
 | Operadores                           | ```. + - * / ++ -- == != > >= < <= && || =```         |
 | Delimitadores                        | ;,(){}[]                                |
 | Comentários de Linha                 | /* Isto é um comentário de bloco */```             |
