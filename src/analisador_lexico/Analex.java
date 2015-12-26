@@ -20,8 +20,8 @@ public class Analex{
     private boolean occurred_error;//atributo de ocorrencia de algum erro lexico na analise
     
     /**
-     Este mÈtodo inicializa os atributos da classe Analex. Abre o arquivo de leitura e inicializa
-     * o vetor de palavras reservadas para o analisador lÈxico.
+     Este m√©todo inicializa os atributos da classe Analex. Abre o arquivo de leitura e inicializa
+     * o vetor de palavras reservadas para o analisador l√©xico.
      * @throws java.io.FileNotFoundException
     */
     public Analex() throws FileNotFoundException,IOException{
@@ -37,7 +37,7 @@ public class Analex{
     }
     
     /**
-    Este mÈtodo abre o arquivo de leitura do analisador lÈxico. Caso o arquivo n√£o possa
+    Este m√©todo abre o arquivo de leitura do analisador l√©xico. Caso o arquivo n√É¬£o possa
     * ser lido ele apresenta uma mensagem de erro de leitura.
     * @throws java.io.FileNotFoundException
     */
@@ -47,11 +47,11 @@ public class Analex{
             fileR = new FileReader("../mi-compiladores/src/analisador_lexico/codigo.txt");
             readFile = new BufferedReader(fileR);
         }else{
-            System.out.print("O arquivo de leitura n„o pode ser lido\n");
+            System.out.print("O arquivo de leitura n√£o pode ser lido\n");
         }
     }
     /**
-    Este mÈtodo abre o arquivo de leitura do analisador lÈxico. Caso o arquivo n√£o possa
+    Este m√©todo abre o arquivo de leitura do analisador l√©xico. Caso o arquivo n√É¬£o possa
     * ser lido ele apresenta uma mensagem de erro de leitura.
     */
     private void openFiletoWrite() throws IOException{
@@ -63,12 +63,12 @@ public class Analex{
             //construtor recebe como argumento o objeto do tipo FileWriter
             writeFile = new BufferedWriter(fileW);
         }else{
-            System.out.print("O arquivo de Escrita n„o pode ser aberto\n");
+            System.out.print("O arquivo de Escrita n√£o pode ser aberto\n");
         }
     }
-    /** Metodo que verifica se a entrada eh uma letra. As letras do alfebeto est„o definidos entre 
-    * o numero decimal 65 ‡ 90 e de 97 ‡ 122 da tabela ASCII. Se receber um caracter com o numero decimal ascii nesta 
-    * margem È dito uma letra.
+    /** Metodo que verifica se a entrada eh uma letra. As letras do alfebeto est√£o definidos entre 
+    * o numero decimal 65 √† 90 e de 97 √† 122 da tabela ASCII. Se receber um caracter com o numero decimal ascii nesta 
+    * margem √© dito uma letra.
     *@return true if is a letter*/
     private boolean isLetter(char caractere){
         //Testa se o valor ASCII do caracter esta entre 64 e 90(A..Z) ou entre  97 e 122 (a..z)
@@ -76,9 +76,9 @@ public class Analex{
     }
        
     /**
-    * Este mÈtodo recebe um caracter e verifica se este È um digito.
-    * Isto È feito utilizando o mÈtodo indexOf da String digitos que contem os digitos
-    * de 0 ‡† 9 e que recebe um caractere como par‚metro e retorna um inteiro maior que 
+    * Este m√©todo recebe um caracter e verifica se este √© um digito.
+    * Isto √© feito utilizando o m√©todo indexOf da String digitos que contem os digitos
+    * de 0 √†¬† 9 e que recebe um caractere como par√¢metro e retorna um inteiro maior que 
     * zero caso este caractere esteja na String.
     */
     private boolean isDigit(char caractere){
@@ -86,9 +86,9 @@ public class Analex{
         return (digitos.indexOf(caractere)>=0);
     }    
     /**
-    * Este mÈtodo recebe um caracter e verifica se este È um delimitador.
-    * Isto È feito utilizando o mÈtodo indexOf da String delimitadores que
-    * contem os delimitadores {}[];.() e que recebe um caractere como par‚metro
+    * Este m√©todo recebe um caracter e verifica se este √© um delimitador.
+    * Isto √© feito utilizando o m√©todo indexOf da String delimitadores que
+    * contem os delimitadores {}[];.() e que recebe um caractere como par√¢metro
     * e retorna um inteiro maior que zero caso este substring esteja na String.
     */
     private boolean isDelimiter(char caractere){
@@ -97,8 +97,8 @@ public class Analex{
     }
     
     /**
-    * Este mÈtodo recebe uma String e verifica se este È um operador.
-    * Isto È feito comparando a String par‚metro com os operadores presente na condicional.
+    * Este m√©todo recebe uma String e verifica se este √© um operador.
+    * Isto √© feito comparando a String par√¢metro com os operadores presente na condicional.
     */
     private boolean isOperator(String caracteres){
         if(caracteres.equals("+") || caracteres.equals("++") || caracteres.equals(".")
@@ -112,10 +112,10 @@ public class Analex{
         return false;
     }
     /**
-     Este metodo recebe uma String como parametro e verifica se esta È uma palavra reservada. 
+     Este metodo recebe uma String como parametro e verifica se esta √© uma palavra reservada. 
      * Se sim retorna true
      * @param word
-     * @return true se È uma palavra reservada
+     * @return true se √© uma palavra reservada
      */
     private boolean isReservedWord(String word){           
         for (int i = 0; i <reservedsWords.length; i++) {
@@ -125,11 +125,11 @@ public class Analex{
         return false;
     }   
     /**
-    Este È o mÈtodo principal da classe Analex, pois È este que recebe um arquivo fonte para an·lise lÈxica e 
-    * e gera um arquivo de saÌda com os tokens e lexemas das cadeias de entrada. Este mÈtodo possui dois laÁos
-    * principais aninhados. Um laÁo lÍ o arquivo linha a linha atÈ encontrar o fim de arquivo. Outro laÁo lÍ 
-    * caractere a caractere para verificar os padrıes contidos nas condicionais. Verificado cada padr„o este mÈtodo 
-    * escreve em um arquivo de saÌda os determinados tokens e lexemas.
+    Este √© o m√©todo principal da classe Analex, pois √© este que recebe um arquivo fonte para an√°lise l√©xica e 
+    * e gera um arquivo de sa√≠da com os tokens e lexemas das cadeias de entrada. Este m√©todo possui dois la√ßos
+    * principais aninhados. Um la√ßo l√™ o arquivo linha a linha at√© encontrar o fim de arquivo. Outro la√ßo l√™ 
+    * caractere a caractere para verificar os padr√µes contidos nas condicionais. Verificado cada padr√£o este m√©todo 
+    * escreve em um arquivo de sa√≠da os determinados tokens e lexemas.
     */
     private void analiser() throws IOException{     
             //abre arquivo para escrita
@@ -138,7 +138,7 @@ public class Analex{
             String linha;
             //salva o numero atual da linha
             int num_linha=0;
-            // guarda a posi√ß√£o do caracter atual na linha a ser analisado
+            // guarda a posi√É¬ß√É¬£o do caracter atual na linha a ser analisado
             int iterador_caracteres;
             // guarda o caracter atual e proximo caracter a serem analisados
             char current_char,next_char;            
@@ -147,13 +147,13 @@ public class Analex{
                 current_char=next_char=' ';
                 iterador_caracteres=0;
                 num_linha++;
-                //pega tamanho da linha para a itera√ß√£o de caracteres
+                //pega tamanho da linha para a itera√É¬ß√É¬£o de caracteres
                 int row_size=linha.length();
                 while(iterador_caracteres<row_size){
                     //ler o primeiro caracter
                     current_char=linha.charAt(iterador_caracteres);                    
 
-//LÛgica para ignorar comentarios
+//L√≥gica para ignorar comentarios
 //***************************************************************************************************
                     //Verifa se existe um proximo caracter para ser lido na linha atual e o armazena. 
                     if((iterador_caracteres+1)<row_size){
@@ -163,11 +163,11 @@ public class Analex{
                     //Consumindo e pulando comentarios de linha: //
                     if(current_char=='/' && next_char=='/'){
                         /*Aqui a variavel iteradora se torna igual ao tamanho da linha, 
-                        forÁando a saida do laÁo de leitura de linha e pulando uma linha de comentario*/
+                        for√ßando a saida do la√ßo de leitura de linha e pulando uma linha de comentario*/
                         iterador_caracteres=row_size;
                     /*Consmindo e pulando comentarios com mais de uma linha;\/**\/.
-                        A logica utilizada nesta condicional È a de verficar se o caracter atual e o proximo formam
-                        a cadeia /*. Caso esta cadeia todos os caracteres posteriores s√£o consumidos atÈ encontrar 
+                        A logica utilizada nesta condicional √© a de verficar se o caracter atual e o proximo formam
+                        a cadeia /*. Caso esta cadeia todos os caracteres posteriores s√É¬£o consumidos at√© encontrar 
                         a sequencia *\/*/
                     }else if(current_char=='/' && next_char=='*'){
                         //Esta variavel armazena o valor da linha que iniciou o comentario caso ocorra um erro
@@ -176,94 +176,94 @@ public class Analex{
                         while(!(current_char=='*' && next_char=='/')){
                             if((iterador_caracteres+2)<row_size){                                
                                 iterador_caracteres++;
-                                current_char=linha.charAt(iterador_caracteres);//ler o caracter apÛs caracter /                    
+                                current_char=linha.charAt(iterador_caracteres);//ler o caracter ap√≥s caracter /                    
                                 next_char=linha.charAt(iterador_caracteres+1);//ler o proximo caracter                                   
-                            //Caso n„o existe um proximo caracter a ser lido    
+                            //Caso n√£o existe um proximo caracter a ser lido    
                             }else{
-                                linha=readFile.readLine();//uma nova linha È lida
+                                linha=readFile.readLine();//uma nova linha √© lida
                                 iterador_caracteres=0;//coloca o iterador no inicio da linha
-                                //Enquanto h· linha a ser lida
+                                //Enquanto h√° linha a ser lida
                                 if(linha!=null){                                    
-                                    row_size=linha.length();//pega o tamnho da linha para iteraÁ„o dos caracteres
+                                    row_size=linha.length();//pega o tamnho da linha para itera√ß√£o dos caracteres
                                     num_linha++;
                                     if((iterador_caracteres+1)<row_size){
                                         current_char=linha.charAt(iterador_caracteres);                    
                                         next_char=linha.charAt(iterador_caracteres+1);
                                     }
                                 }else{                                   
-                                    //Se n„o h· mais linhas a serem lidas e ainda n„o encontrou a sequencia /*
+                                    //Se n√£o h√° mais linhas a serem lidas e ainda n√£o encontrou a sequencia /*
                                     occurred_error=true;//ocorreu um erro lexico.
-                                    writeFile.write("Erro Lexico  Comentario n„o foi fechado  Linha "+num_linha+"\n");
-                                    System.out.printf("Erro Lexico na linha %d Comentario n„o foi fechado\n",num_row_coment); 
+                                    writeFile.write("Erro Lexico  Comentario n√£o foi fechado  Linha "+num_linha+"\n");
+                                    System.out.printf("Erro Lexico na linha %d Comentario n√£o foi fechado\n",num_row_coment); 
                                     row_size = iterador_caracteres=0;
                                     break;
                                 }
                             }   
                         } 
-                        /*Como foi usada a lÛgica de pegar o caractere corrente e o proximo este incrementador serve para ignorar 
+                        /*Como foi usada a l√≥gica de pegar o caractere corrente e o proximo este incrementador serve para ignorar 
                         o proximo caracter ao fim da analise de comentario, no caso o '/'*/
                         iterador_caracteres++;                      
                     }
-//LÛgica para palavras reservadas e identificadores
+//L√≥gica para palavras reservadas e identificadores
 //***************************************************************************************************
-                    /*IF para verificar se È uma palavra reservada ou um identificador
-                    Inicialmente verifica se o primeiro caractere È uma letra*/
+                    /*IF para verificar se √© uma palavra reservada ou um identificador
+                    Inicialmente verifica se o primeiro caractere √© uma letra*/
                     else if(isLetter(current_char)){
-                        /*Apos verificar que o primeiro caractere da palavra sendo uma letra percorre-se a sequÍncia de
-                        caracteres atÈ encontrar um caractere que n„o faz parte do padr„o ou o caractere de fim de linha.
-                        A variavel iterador comeÁa a partir do prÛximo caracter da linha.
-                        A variavel erro guarda um true se ocorrer algum erro de padr„o na sequencia de caracteres para
+                        /*Apos verificar que o primeiro caractere da palavra sendo uma letra percorre-se a sequ√™ncia de
+                        caracteres at√© encontrar um caractere que n√£o faz parte do padr√£o ou o caractere de fim de linha.
+                        A variavel iterador come√ßa a partir do pr√≥ximo caracter da linha.
+                        A variavel erro guarda um true se ocorrer algum erro de padr√£o na sequencia de caracteres para
                         identificador.
                         */  
                         iterador_caracteres++;
                         boolean erro=false;//caso ocorra algum erro
                         String temp_caracters=""+current_char;//armazena o lexema temporario
-                        //Este loop vai iterar caracter a caracter atÈ o fim da linha
+                        //Este loop vai iterar caracter a caracter at√© o fim da linha
                         while(iterador_caracteres<row_size){
                             current_char=linha.charAt(iterador_caracteres);//ler o caracter a ser analisado agora
-                            //verifica se h· um proximo caracter a ser lido para a analise de operadores com 2 caracteres
+                            //verifica se h√° um proximo caracter a ser lido para a analise de operadores com 2 caracteres
                             if(iterador_caracteres+1<row_size){
                                 next_char=linha.charAt(iterador_caracteres+1);//ler o caracter a ser analisado agora
                             }                            
                             //Aninhamento de IFs para o teste analise lexica para um identificador
-                            //Caracteres v·lidos de um identificador ou palavra reservada
+                            //Caracteres v√°lidos de um identificador ou palavra reservada
                             if(isLetter(current_char) || isDigit(current_char) || current_char=='_'){
                                 temp_caracters= temp_caracters+current_char;
-                            /*Caso no meio da analise de um identificador ou palavra reservada exista um caracte espaÁo 
-                                um operador ou delimitador este tipo de analise È encerrada e volta-se uma posiÁ„o para
-                                garantir a an·lise do novo padr„o. !(((int)current_char==32) || ((int)current_char==9) || ((int)current_char==11) || ((int)current_char==13))*/    
+                            /*Caso no meio da analise de um identificador ou palavra reservada exista um caracte espa√ßo 
+                                um operador ou delimitador este tipo de analise √© encerrada e volta-se uma posi√ß√£o para
+                                garantir a an√°lise do novo padr√£o. !(((int)current_char==32) || ((int)current_char==9) || ((int)current_char==11) || ((int)current_char==13))*/    
                             }else if(((int)current_char)==32 || isOperator(""+current_char) || isOperator(""+next_char+current_char) || isDelimiter(current_char)
                                     ||  ((int)current_char==9) || ((int)current_char==11) || ((int)current_char==13)){
-                                //Se for alguma das opÁıes acima volta uma posiÁ„o para analisar o proximo padr„o e sai deste loop.                               
+                                //Se for alguma das op√ß√µes acima volta uma posi√ß√£o para analisar o proximo padr√£o e sai deste loop.                               
                                 iterador_caracteres--;
                                 break;
                             }else if(current_char!='\n'){
-                                //Se ocorrer algum outro simbolo que n„o esteja nas verificaÁıes acima s„o considerado  um erro lexico
+                                //Se ocorrer algum outro simbolo que n√£o esteja nas verifica√ß√µes acima s√£o considerado  um erro lexico
                                 erro=true;//Faz erro verdadeiro
                                 occurred_error=true;//ocorreu um erro lexico.
-                                writeFile.write("Erro Lexico Identificador com caracter inv·lido "+current_char+" Linha "+num_linha+"\n");
+                                writeFile.write("Erro Lexico Identificador com caracter inv√°lido "+current_char+" Linha "+num_linha+"\n");
                                 System.out.printf("Erro Lexico Identificador com caracter invalido: %c Linha %d\n",current_char, num_linha);
                                 break;
                             }
                             iterador_caracteres++;
                         }
                         if(erro){
-                            /*J· que ocorreu algum erro este loop percorre e consome o resto da sequencia 
-                            de caracteres apÛs o erro lexico. Se outra palavra for iniciada haver· a verificaÁ„o de outro padr„o, pois
-                            este loop e o seu loop pai ser„o pulados*/
+                            /*J√° que ocorreu algum erro este loop percorre e consome o resto da sequencia 
+                            de caracteres ap√≥s o erro lexico. Se outra palavra for iniciada haver√° a verifica√ß√£o de outro padr√£o, pois
+                            este loop e o seu loop pai ser√£o pulados*/
                             while(iterador_caracteres+1<row_size){
                                     iterador_caracteres++;
                                     current_char = linha.charAt(iterador_caracteres);//ler o caracter a ser analisado agora
                                     if(((int)current_char==32) || isDelimiter(current_char) || isOperator(""+current_char) || ((int)current_char==13) || ((int)current_char ==32)){
-                                        //Se for alguma das op√ß√µes acima volta uma posi√ß√£o e sai deste loop para verificar outro padr√£o.
+                                        //Se for alguma das op√É¬ß√É¬µes acima volta uma posi√É¬ß√É¬£o e sai deste loop para verificar outro padr√É¬£o.
                                         iterador_caracteres--;
                                         break;
                                     }
                             }
                             erro=false;
                         }else{
-                            //Se n„o houver nenhum erro lexico imprime no arquivo
-                            //Neste IF verifica-se se a palavra È reservada
+                            //Se n√£o houver nenhum erro lexico imprime no arquivo
+                            //Neste IF verifica-se se a palavra √© reservada
                             if(isReservedWord(temp_caracters)){
                                 //TOKEN_RES_palavra_NumeroDaLinha
                                 //escreve o conteudo no arquivo
@@ -276,9 +276,9 @@ public class Analex{
                             }                                  
                         }
                     }    
-//LÛgica para  verificar n˙meros negativos
+//L√≥gica para  verificar n√∫meros negativos
 //***************************************************************************************************                    
-                    //verifica se atual È um - e o prÛximo È um n˙mero para entrar na lÛgica
+                    //verifica se atual √© um - e o pr√≥ximo √© um n√∫mero para entrar na l√≥gica
                     else if(isDigit(next_char) && (int)current_char == 45  ){
                         String numero;
                         numero=""+current_char;
@@ -295,9 +295,9 @@ public class Analex{
                         //parte fracionario
                         if ((int)current_char == 46) {
                             numero = numero + current_char;
-                            //verifica pra n„o dar erro de espaÁo em branco
+                            //verifica pra n√£o dar erro de espa√ßo em branco
                             if (iterador_caracteres + 1 < row_size) {
-                                //  verificar se È n˙mero
+                                //  verificar se √© n√∫mero
                                 iterador_caracteres++;
                                 current_char = linha.charAt(iterador_caracteres);
                                 //System.out.printf("valor de current" + current_char + "\n");
@@ -306,8 +306,8 @@ public class Analex{
                                     iterador_caracteres++;
                                     current_char = linha.charAt(iterador_caracteres);
                                 }
-                                //adicionando o ultimo numero q n„o entra na contagem                                
-                                //Se o atual caracter for um n˙mero adicionar na vari·vel n˙mero(token)
+                                //adicionando o ultimo numero q n√£o entra na contagem                                
+                                //Se o atual caracter for um n√∫mero adicionar na vari√°vel n√∫mero(token)
                                 if(isDigit(current_char)){
                                     numero = numero + current_char;
                                     System.out.printf("TOKEN#NUM_F#"+""+numero+"#"+num_linha+"\n");
@@ -319,11 +319,11 @@ public class Analex{
                                     System.out.printf("TOKEN#NUM_F#"+""+numero+"#"+num_linha+"\n");
                                     writeFile.write("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
                                 }
-                              //quando entrar algo errado no n˙mero.
+                              //quando entrar algo errado no n√∫mero.
                               else if(!isDigit(current_char)){
-                                //registrando o erro no n˙mero 
+                                //registrando o erro no n√∫mero 
                                 numero=numero+current_char;
-                                //percorrendo a string errada atÈ terminar 
+                                //percorrendo a string errada at√© terminar 
                                 while((int)current_char !=32  && iterador_caracteres +1 < row_size){
                                     iterador_caracteres++;
                                     current_char = linha.charAt(iterador_caracteres);
@@ -336,25 +336,25 @@ public class Analex{
                             
                             }
                         }
-                        //quando n„o tiver a parte de fraÁ„o 
+                        //quando n√£o tiver a parte de fra√ß√£o 
                         else{
-                            // quando o ˙ltimo caracter n„o for n˙mero
+                            // quando o √∫ltimo caracter n√£o for n√∫mero
                             if( (int)current_char == 32 ){
-                                 System.out.printf("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
-                                 writeFile.write("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
+                                 System.out.printf("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
+                                 writeFile.write("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
                             }
-                            //passando quando o atual È um n˙mero e t· na estrutura correta
+                            //passando quando o atual √© um n√∫mero e t√° na estrutura correta
                             else if(isDigit(current_char)){
                                 numero = numero + current_char;
-                                System.out.printf("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
-                                writeFile.write("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
+                                System.out.printf("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
+                                writeFile.write("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
                                 iterador_caracteres++;
                             }
-                         //quando o atual n„o È um dÌgito , ou seja, o n˙mero n„o estar na estrutura correta
+                         //quando o atual n√£o √© um d√≠gito , ou seja, o n√∫mero n√£o estar na estrutura correta
                             else if(!isDigit(current_char)){
-                                //registrando o erro no n˙mero 
+                                //registrando o erro no n√∫mero 
                                 numero=numero+current_char;
-                                //percorrendo a string errada atÈ terminar 
+                                //percorrendo a string errada at√© terminar 
                                 while((int)current_char !=32  && iterador_caracteres +1 < row_size){
                                     iterador_caracteres++;
                                     current_char = linha.charAt(iterador_caracteres);
@@ -366,11 +366,11 @@ public class Analex{
                             }    
                       }
                     }
-// lÛgica para cadeia constante      
+// l√≥gica para cadeia constante      
 //***************************************************************************************************                                        
-                    // verifica se tem as aspas duplas para poder verificar os prÛximos caracteres 
+                    // verifica se tem as aspas duplas para poder verificar os pr√≥ximos caracteres 
                     else if(current_char == '"'){
-                        //string que vai armazenar a cadeia constante e exibir para o usu·rio   
+                        //string que vai armazenar a cadeia constante e exibir para o usu√°rio   
                         String cadeia=""+current_char;
                         if((iterador_caracteres+1)<row_size){
                             current_char=linha.charAt(iterador_caracteres+1);
@@ -378,7 +378,7 @@ public class Analex{
                         cadeia = cadeia+current_char;
                         iterador_caracteres++;
                         boolean erro=false;
-                        // percorrendo toda a cadeia constante atÈ achar o delimitador 
+                        // percorrendo toda a cadeia constante at√© achar o delimitador 
                         while(current_char !='"'){
                             if((iterador_caracteres+2)<=row_size){
                                current_char = linha.charAt(iterador_caracteres+1);//ler o primeiro caracter   
@@ -391,24 +391,24 @@ public class Analex{
                         }
                         if(erro){
                             occurred_error=true;//ocorreu um erro lexico.
-                            System.out.printf("Erro Cadeia constante n„o fechou Linha "+num_linha+"\n");
-                            writeFile.write("Erro Cadeia constante n„o fechou "+cadeia+" Linha "+num_linha+"\n");
+                            System.out.printf("Erro Cadeia constante n√£o fechou Linha "+num_linha+"\n");
+                            writeFile.write("Erro Cadeia constante n√£o fechou "+cadeia+" Linha "+num_linha+"\n");
                         }else{
                             System.out.printf("TOKEN#CAD#"+cadeia+"#"+num_linha+"\n");
                             writeFile.write("TOKEN#CAD#"+cadeia+"#"+num_linha+"\n");
                         }                   
                     }
-// lÛgica para caractere constante                          
+// l√≥gica para caractere constante                          
 //***************************************************************************************************                                        
                     else if(current_char==39){
                         String caracter=""+current_char;
-                        //// vendo se o iterador +1 È em branco e tratando isso com o else
+                        //// vendo se o iterador +1 √© em branco e tratando isso com o else
                         if((int)(iterador_caracteres+1)!=32){
-                          // verificando se est„o na faixa de parametro aceita pela estrutura lexica
+                          // verificando se est√£o na faixa de parametro aceita pela estrutura lexica
                           if(isDigit(linha.charAt(iterador_caracteres+1))||isLetter(linha.charAt(iterador_caracteres+1))){
-                                   //verificando se o iterador +2 È diferente de espaÁo em branco 
+                                   //verificando se o iterador +2 √© diferente de espa√ßo em branco 
                                     if((int)(iterador_caracteres+2)!=32){
-                                      //veirificando se o prÛximo caracter È uma aspas simples ,dessa forma checando se o usu·rio fechou a constante
+                                      //veirificando se o pr√≥ximo caracter √© uma aspas simples ,dessa forma checando se o usu√°rio fechou a constante
                                       if(linha.charAt(iterador_caracteres+2)==39){
                                            // reconhecendo um caracter constante   
                                            caracter=caracter+linha.charAt(iterador_caracteres+1);
@@ -418,71 +418,71 @@ public class Analex{
                                           iterador_caracteres=+2;
                                       }
                                       else{
-                                          // mostando a mensagem de erro na construÁ„o de caracter constante
+                                          // mostando a mensagem de erro na constru√ß√£o de caracter constante
                                           caracter=caracter+linha.charAt(iterador_caracteres+1);
                                           occurred_error=true;//ocorreu um erro lexico.
-                                          System.out.printf("Erro Lexico o Terceiro caracter n„o È uma aspas simples %s Linha %d\n",caracter, num_linha);
-                                          writeFile.write("Erro Lexico o Terceiro caracter n„o È uma aspas simples "+caracter+" Linha "+num_linha+"\n");
+                                          System.out.printf("Erro Lexico o Terceiro caracter n√£o √© uma aspas simples %s Linha %d\n",caracter, num_linha);
+                                          writeFile.write("Erro Lexico o Terceiro caracter n√£o √© uma aspas simples "+caracter+" Linha "+num_linha+"\n");
                                           iterador_caracteres=+2;
                                           break;
                                       }
                                 }
-                                //erro o terceiro caracter È um espaÁo em branco o else trata isso e passa a mensagem para o usu·rio
+                                //erro o terceiro caracter √© um espa√ßo em branco o else trata isso e passa a mensagem para o usu√°rio
                                 else{
-                                  //mostrar para o usu·rio atÈ que ponto tava a construnÁ„o do token 
+                                  //mostrar para o usu√°rio at√© que ponto tava a construn√ß√£o do token 
                                       caracter=caracter+linha.charAt(iterador_caracteres+1);
                                       occurred_error=true;//ocorreu um erro lexico.
-                                      System.out.printf("Erro Lexico n„o fechou o caracter %s Linha %d\n",caracter, num_linha);
-                                      writeFile.write("Erro Lexico n„o fechou o caracter "+caracter+" Linha "+num_linha+"\n");
+                                      System.out.printf("Erro Lexico n√£o fechou o caracter %s Linha %d\n",caracter, num_linha);
+                                      writeFile.write("Erro Lexico n√£o fechou o caracter "+caracter+" Linha "+num_linha+"\n");
                                       iterador_caracteres=+2;
                                 }
                           }
                           else{
-                              ///quando tem caracter n„o aceito pela estrutura de caracter constante
+                              ///quando tem caracter n√£o aceito pela estrutura de caracter constante
                                occurred_error=true;//ocorreu um erro lexico.
-                              System.out.printf("Erro Lexico contÈm caracter n„o aceito %s Linha %d\n",caracter, num_linha);
-                              writeFile.write("Erro Lexico contÈm caracter n„o aceito "+caracter+" Linha "+num_linha+"\n");
+                              System.out.printf("Erro Lexico cont√©m caracter n√£o aceito %s Linha %d\n",caracter, num_linha);
+                              writeFile.write("Erro Lexico cont√©m caracter n√£o aceito "+caracter+" Linha "+num_linha+"\n");
                               iterador_caracteres=+2;
                               break;
                           }
                           }else{
-                              // quando o segundo caracter È um espaÁo em branco 
+                              // quando o segundo caracter √© um espa√ßo em branco 
                                occurred_error=true;//ocorreu um erro lexico.
-                               System.out.printf("Erro Lexico contÈm caracter n„o aceito %s Linha %d\n",caracter, num_linha);
-                               writeFile.write("Erro Lexico contÈm caracter n„o aceito "+caracter+" Linha "+num_linha+"\n");
+                               System.out.printf("Erro Lexico cont√©m caracter n√£o aceito %s Linha %d\n",caracter, num_linha);
+                               writeFile.write("Erro Lexico cont√©m caracter n√£o aceito "+caracter+" Linha "+num_linha+"\n");
                               iterador_caracteres=+2;
                           }
                     }
-//LÛgica para Operadores
+//L√≥gica para Operadores
 //******************************************************************************************************
-                    //Este verifica se o caracter È um operador duplo e imprime no arquivo.Pega o atual e o proximo caractere
+                    //Este verifica se o caracter √© um operador duplo e imprime no arquivo.Pega o atual e o proximo caractere
                     else if((int)next_char!=32 &&  isOperator(""+current_char+next_char)){
                         writeFile.write("TOKEN#OP#"+""+current_char+next_char+"#"+num_linha+"\n");                        
                         System.out.printf("TOKEN#OP#"+""+current_char+next_char+"#"+num_linha+"\n");
                         iterador_caracteres++;
                     }
-                    //Este verifica se o caracter È um operador un·rio e imprime no arquivo. Pega apenas o caracter atual.
+                    //Este verifica se o caracter √© um operador un√°rio e imprime no arquivo. Pega apenas o caracter atual.
                     else if(isOperator(""+current_char)){
                         writeFile.write("TOKEN#OP#"+""+current_char+"#"+num_linha+"\n");
                         System.out.printf("TOKEN#OP#"+""+current_char+"#"+num_linha+"\n");
                     }    
                  
-//LÛgica para delimitadores
+//L√≥gica para delimitadores
 //******************************************************************************************************
-                    //Este verifica se o caracter È um delimitador e imprime no arquivo.
+                    //Este verifica se o caracter √© um delimitador e imprime no arquivo.
                     else if(isDelimiter(current_char)){
                         writeFile.write("TOKEN#DEL#"+current_char+"#"+num_linha+"\n");
                         System.out.printf("TOKEN#DEL#"+current_char+"#"+num_linha+"\n");
                     }
-//LÛgica para numeros reais e inteiros positivos
+//L√≥gica para numeros reais e inteiros positivos
 //******************************************************************************************************
-                    /*Este verifica se o caracter È um numero inteiro ou real e imprime no arquivo.
-                    Caso ocorra um erro do tipo 34edf ou 1. ou 1.2er ou 1.a ou 2.2.2 È dito um erro lÈxico 
-                    e a sequÍncia de erro √© impressa junto a mensagem de erro e a linha.
+                    /*Este verifica se o caracter √© um numero inteiro ou real e imprime no arquivo.
+                    Caso ocorra um erro do tipo 34edf ou 1. ou 1.2er ou 1.a ou 2.2.2 √© dito um erro l√©xico 
+                    e a sequ√™ncia de erro √É¬© impressa junto a mensagem de erro e a linha.
                     */
                     else if(isDigit(current_char)){
                         String temp="";//armazena primeiro digito 
-                        //Percorre parte inteira do n˙mero e armazena
+                        //Percorre parte inteira do n√∫mero e armazena
                         while(isDigit(current_char)){
                             if(iterador_caracteres+1<row_size){
                                 temp=temp+current_char;
@@ -497,11 +497,11 @@ public class Analex{
                         if(isDigit(current_char)){
                             temp=temp+current_char;
                         }
-                        //Testa se h· a parte fracionaria
+                        //Testa se h√° a parte fracionaria
                         if((int)current_char==46){
                             int cont_frac=0;//Conta quantos numeros tem depois do ponto flutuante, se tiver.
                             temp=temp+current_char;//armazena o ponto fracionario
-                            //Testa se h· mais caracteres na linha
+                            //Testa se h√° mais caracteres na linha
                             if(iterador_caracteres+1<row_size){
                                 iterador_caracteres++;//pula para o proximo
                                 current_char=linha.charAt(iterador_caracteres);//pega o caractere atual
@@ -510,7 +510,7 @@ public class Analex{
                                     if(iterador_caracteres+1<row_size){
                                         cont_frac++;//incrementa parte fracionaria
                                         temp=temp+current_char;
-                                        iterador_caracteres++;//proxima iteraÁ„o de caractere                
+                                        iterador_caracteres++;//proxima itera√ß√£o de caractere                
                                         current_char= current_char=linha.charAt(iterador_caracteres);//atualiza o caracter atual
                                     }else{
                                         iterador_caracteres=row_size;
@@ -521,7 +521,7 @@ public class Analex{
                                 if(isDigit(current_char)){
                                     temp=temp+current_char;
                                     cont_frac++;
-                                //Se n„o È um caractere invalido
+                                //Se n√£o √© um caractere invalido
                                 }else if(!(isDelimiter(current_char) || (int)current_char==32 || isOperator(""+current_char)) || (int)current_char==46){
                                     cont_frac=0;
                                     int cont_err=0;//conta quantas vezes houve erro
@@ -543,7 +543,7 @@ public class Analex{
                                     }
                                 }
                             }else{
-                                iterador_caracteres=row_size; //Como foi o ultimo caractere isso È feito para pular a linha na proxima iteraÁ„o
+                                iterador_caracteres=row_size; //Como foi o ultimo caractere isso √© feito para pular a linha na proxima itera√ß√£o
                             }                         
                             if(cont_frac>0){
                                 System.out.printf("TOKEN#NUM_F#"+temp+"#"+num_linha+"\n");
@@ -557,13 +557,13 @@ public class Analex{
                             }
                         //ELSE para numero inteiro
                         }else{
-                            //Testa se È um numero inteiro v·lido verificando se o proximo caractere È o fim de um inteiro: espaÁo delimitador ou operador
+                            //Testa se √© um numero inteiro v√°lido verificando se o proximo caractere √© o fim de um inteiro: espa√ßo delimitador ou operador
                             if(isOperator(""+current_char) || isDelimiter(current_char) || (int)current_char==32 || iterador_caracteres==row_size){
                                 System.out.printf("TOKEN#NUM_I#"+temp+"#"+num_linha+"\n");
                                 writeFile.write("TOKEN#NUM_I#"+temp+"#"+num_linha+"\n");
-                                iterador_caracteres--;//volta uma posiÁ„o para pegar o espaÁo delimitador ou operador na prÛxima verificaÁ„o
+                                iterador_caracteres--;//volta uma posi√ß√£o para pegar o espa√ßo delimitador ou operador na pr√≥xima verifica√ß√£o
                             }else{
-                                    /*Percorre a linha apÛs a partir do ponto colocado errado atÈ consumir 
+                                    /*Percorre a linha ap√≥s a partir do ponto colocado errado at√© consumir 
                                     todos caracteres pertencentes ao numero errado*/ 
                                     temp=temp+current_char;
                                     while(iterador_caracteres+1<row_size){
@@ -577,26 +577,26 @@ public class Analex{
                                         temp=temp+current_char;
                                     }
                                     occurred_error=true;//ocorreu um erro lexico.
-                                    System.out.printf("Erro Lexico N˙mero mal formado: %s - linha: %d\n",temp,num_linha);
+                                    System.out.printf("Erro Lexico N√∫mero mal formado: %s - linha: %d\n",temp,num_linha);
                                     writeFile.write("Erro Lexico Numero mal formado com caracter invalido "+temp+" Linha "+num_linha+"\n");
                             }                            
                         }                        
                     }              
                     /*
-                    Os caracteres espaÁos, \t, \r e \n (ASCII: 32,9,11,13) n„o s„o considerados caracteres invalidos, no entanto caso ocorra algo que n„o
-                    esteja dentro dos padrıes analisados anteriormente o analisador entrara neste else if como um erro lexico, pois 
-                    estar„o fora dos padrıes analisados.
+                    Os caracteres espa√ßos, \t, \r e \n (ASCII: 32,9,11,13) n√£o s√£o considerados caracteres invalidos, no entanto caso ocorra algo que n√£o
+                    esteja dentro dos padr√µes analisados anteriormente o analisador entrara neste else if como um erro lexico, pois 
+                    estar√£o fora dos padr√µes analisados.
                     */
                     else if(!(((int)current_char==32) || ((int)current_char==9) || ((int)current_char==11) || ((int)current_char==13))){                        
                         occurred_error=true;//ocorreu um erro lexico.
                         writeFile.write("Erro Lexico Caracter Invalido "+current_char+" Linha "+num_linha+"\n");
                         System.out.printf("Erro Lexico Caracter Invalido %c Linha: %d\n",current_char,num_linha);
                     }
-                    next_char=' ';//reinicializa o proximo caractere para a analise anterior n„o ser usada na prÛxima.
+                    next_char=' ';//reinicializa o proximo caractere para a analise anterior n√£o ser usada na pr√≥xima.
                     iterador_caracteres++;//incrementa caracteres de linha
                 }//fecha loop de caracteres               
             }//fecha loop de linha
-            //Se n„o ocorrer nenhum erro lÈxico exibe mensagem de Sucesso no fim do arquivo.
+            //Se n√£o ocorrer nenhum erro l√©xico exibe mensagem de Sucesso no fim do arquivo.
             if(!occurred_error){
                 writeFile.write("Sucesso\n");
                 System.out.printf("Sucesso\n");
