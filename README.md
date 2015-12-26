@@ -50,29 +50,29 @@ Arquivos presentes
 * A execução do analisador léxico resulta no arquivo lexOut.txt que contem em cada linha um token representando os padrões analisados. Estes contem o tipo de token, o lexema e a linha correspondente a ocorrência do símbolo. Abaixo é apresentada a formação de cada tipo de token possível para a linguagem.
  
 | TOKEN#RES - Palavra reservada            |
- ----------------------------
-| TOKEN#RES#palavra_reservada#numero_linha |
+ ------------------------------------------
+| ```TOKEN#RES#palavra_reservada#numero_linha``` |
   
 | TOKEN#ID# - Identificador                |
- --------------------------
-| TOKEN#ID#identificador#numero_linha      |
+ ------------------------------------------
+| ```TOKEN#ID#identificador#numero_linha```      |
 
 | TOKEN#NUM# - Número                      |
- ---------------
-| TOKEN#NUM_I# - Inteiro                   |
-| TOKEN#NUM_F# - Real                      |
+ ------------------------------------------
+| ```TOKEN#NUM_I# - Inteiro```                   |
+| ```TOKEN#NUM_F# - Real```                      |
 
-| TOKEN#CAD# - Cadeia Constante            |
- --------------------------------
+| ```TOKEN#CAD#número_linha - Cadeia Constante```            |
+ ------------------------------------------
 
-| TOKEN#CAD# - Caractere Constante         |
- --------------------------------
+| ```TOKEN#CAD#número_linha - Caractere Constante```         |
+ ------------------------------------------
 
 | TOKEN#OP# - Operador                     |
- -------------------
-| TOKEN#OP#operador#numero_linha           |
+ ------------------------------------------
+| ```TOKEN#OP#operador#numero_linha```           |
  
 | TOKEN#DEL# - DEL                         |
- -------------------
-| TOKEN#DEL#delimitador#numero_linha       |
+ ------------------------------------------	
+| ```TOKEN#DEL#delimitador#numero_linha```       |
 
