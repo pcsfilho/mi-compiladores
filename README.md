@@ -65,7 +65,7 @@ Arquivos presentes
 | ```TOKEN#CAD#número_linha - Cadeia Constante```            |
  ------------------------------------------
 
-| ```TOKEN#CAD#número_linha - Caractere Constante```         |
+| ```TOKEN#CAR#número_linha - Caractere Constante```         |
  ------------------------------------------
 
 | TOKEN#OP# - Operador                     |
