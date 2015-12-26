@@ -35,14 +35,14 @@ Arquivos presentes
 | Palavra Token                        | Expressão regular correspondente     |
 |--------------------------------------|--------------------------------------|
 | Palavras reservadas                  | class, const, else, if, new, read, write, return, void, while, int, float, bool, string, char, true, false, main |
-| Identificadores                      | Letra(Letra||Dígito||_)*                          |
+| Identificadores                      | ```Letra(Letra|Dígito|_)*```                          |
 | Número                               | (-)?Dígito+(.Dígito+)?                              |
-| Letra                                | (a..z||A..Z)                                 |
+| Letra                                | ```(a..z|A..Z)```                                 |
 | Dígito                               | 0..9                                        |
 | Símbolo                              | ASCII de 33 a 126                               |
-| Cadeia Constante                     | "(Letra||Dígito||Símbolo (exceto 34))*"            |
-| Caractere Constante                  | '(Letra||Dígito)'           |
-| Operadores                           | . + - * / ++ -- == != > >= < <= && || =         |
+| Cadeia Constante                     | ```"(Letra|Dígito|Símbolo (exceto 34))*"```            |
+| Caractere Constante                  | '(Letra|Dígito)'           |
+| Operadores                           | ```. + - * / ++ -- == != > >= < <= && || =```         |
 | Delimitadores                        | ;,(){}[]                                |
 | Comentários de Linha                 | /* Isto é um comentário de bloco */```             |
 | Comentários de Bloco                 | // Isto é um comentário de linha```                |
