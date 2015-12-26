@@ -1,0 +1,135 @@
+TOKEN#RES#class#2
+TOKEN#RES#main#2
+TOKEN#DEL#(#2
+TOKEN#RES#void#2
+TOKEN#DEL#)#2
+TOKEN#DEL#{#3
+TOKEN#ID#variables#4
+TOKEN#DEL#{#5
+TOKEN#ID#integer#6
+TOKEN#ID#a#6
+TOKEN#DEL#,#6
+TOKEN#ID#i#6
+TOKEN#DEL#;#6
+TOKEN#ID#integer#7
+TOKEN#ID#x#7
+TOKEN#DEL#;#7
+TOKEN#RES#float#8
+TOKEN#ID#s#8
+TOKEN#DEL#;#8
+TOKEN#RES#float#9
+TOKEN#ID#b#9
+TOKEN#DEL#;#9
+TOKEN#DEL#}#10
+TOKEN#ID#metodos#11
+TOKEN#DEL#{#12
+TOKEN#RES#void#13
+TOKEN#ID#Teste#13
+TOKEN#DEL#(#13
+TOKEN#RES#void#13
+TOKEN#DEL#)#13
+TOKEN#DEL#{#14
+TOKEN#ID#i#15
+TOKEN#OP#=#15
+TOKEN#NUM_I#1#15
+TOKEN#OP#-#15
+TOKEN#NUM_I#3#16
+TOKEN#DEL#;#16
+TOKEN#ID#s#17
+TOKEN#OP#=#17
+Erro Lexico Numero mal formado -1..3;  Linha 17
+TOKEN#ID#b#18
+TOKEN#OP#=#18
+Erro Lexico Numero mal formado com caracter Invalido 1.3.3.6 Linha 18
+TOKEN#DEL#;#18
+TOKEN#ID#a#19
+TOKEN#OP#=#19
+Erro Lexico Numero mal formado -1@;  Linha 19
+Erro Lexico Numero mal formado com caracter Invalido 1..3.334.3.3 Linha 20
+TOKEN#OP#>=#20
+TOKEN#ID#casa#20
+TOKEN#ID#b#21
+TOKEN#OP#=#21
+Erro Lexico Numero mal formado com caracter Invalido 9. Linha 21
+TOKEN#DEL#;#21
+TOKEN#NUM_I#1#22
+TOKEN#OP#-#22
+TOKEN#NUM_I#5#22
+TOKEN#DEL#;#22
+TOKEN#NUM_I#1#23
+Erro Lexico Numero mal formado -5;  Linha 23
+TOKEN#NUM_I#1#24
+TOKEN#OP#--#24
+TOKEN#NUM_I#2#24
+TOKEN#DEL#;#24
+TOKEN#NUM_I#1#25
+TOKEN#OP#--#25
+TOKEN#NUM_I#2#25
+TOKEN#DEL#;#25
+TOKEN#NUM_I#1#26
+TOKEN#OP#-#26
+TOKEN#OP#-#26
+TOKEN#NUM_I#2#26
+TOKEN#DEL#;#26
+TOKEN#NUM_I#1#27
+TOKEN#OP#-#27
+Erro Lexico Numero mal formado -2;  Linha 27
+TOKEN#ID#j#28
+TOKEN#OP#--#28
+TOKEN#OP#+#28
+TOKEN#NUM_I#5#28
+TOKEN#DEL#;#28
+TOKEN#ID#j#29
+TOKEN#OP#--#29
+Erro Lexico Numero mal formado -5;  Linha 29
+TOKEN#DEL#}#31
+TOKEN#DEL#}#32
+TOKEN#DEL#}#33
+TOKEN#RES#class#39
+TOKEN#ID#principal#39
+TOKEN#DEL#{#39
+TOKEN#ID#variables#40
+TOKEN#DEL#{#40
+TOKEN#ID#integer#41
+Erro Lexico Caracter Invalido $ Linha 41
+TOKEN#DEL#;#41
+TOKEN#ID#inteiro#42
+TOKEN#ID#x#42
+TOKEN#DEL#;#42
+TOKEN#ID#integer#43
+Erro Lexico Identificador com caracter inválido ? Linha 43
+TOKEN#DEL#;#43
+TOKEN#RES#string#44
+TOKEN#ID#nome#44
+TOKEN#OP#=#44
+TOKEN#CAD#"Zezim"#44
+TOKEN#DEL#;#44
+TOKEN#DEL#}#45
+TOKEN#ID#methods#46
+TOKEN#DEL#{#46
+TOKEN#ID#a#47
+TOKEN#OP#=#47
+Erro Lexico o Terceiro caracter não é uma aspas simples 'a Linha 47
+TOKEN#ID#a#48
+TOKEN#OP#=#48
+Erro Lexico Numero mal formado com caracter Invalido 2.&.a Linha 48
+TOKEN#DEL#;#48
+TOKEN#ID#a#49
+TOKEN#OP#=#49
+Erro Lexico Numero mal formado com caracter Invalido 7.x Linha 49
+TOKEN#DEL#;#49
+TOKEN#ID#se#51
+TOKEN#DEL#(#51
+TOKEN#ID#a#51
+TOKEN#OP#>#51
+TOKEN#NUM_I#10#51
+TOKEN#DEL#)#51
+TOKEN#ID#entao#51
+TOKEN#DEL#{#52
+TOKEN#ID#x#53
+TOKEN#OP#=#53
+TOKEN#OP#-#53
+TOKEN#ID#a#53
+TOKEN#DEL#;#53
+TOKEN#DEL#}#54
+Erro Lexico  Comentario não foi fechado  Linha 58
