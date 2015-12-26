@@ -5,7 +5,7 @@ foi utilizado a versão 1.8 do JAVA.
 
 Autor: Paulo Cezar dos Santos Filho(paulo.ecomp@gmail.com)
 
-Autor: rejânio Moraes Filho.(rejaniomoraes@gmail.com)
+Autor: Rejanio Moraes Filho.(rejaniomoraes@gmail.com)
 
 Execução do código fonte
 ------------------------
@@ -48,7 +48,9 @@ Arquivos presentes
 | Comentários de Bloco                 | // Isto é um comentário de linha```                |
 
 * A execução do analisador léxico resulta no arquivo lexOut.txt que contem em cada linha um token representando os padrões analisados. Estes contem o tipo de token, o lexema e a linha correspondente a ocorrência do símbolo. Abaixo é apresentada a formação de cada tipo de token possível para a linguagem.
- 
+ **Observação importante: para os números negativos foi considerado que um número é apenas composto pelo operador - e o número [0..9](exemplo: -9) , caso o número não for fracionário, se for a estrutura correta será operador - número . número -apenas número- (exemplo : -9.9 ). Dessa forma o seguinte exemplo -9; ou -9.9; dará erro léxico pois o delimitador(;) está na cadeia de caracteres do número, mas a seguinte estrutura estar correta -9 ; ou -9.9 ; . Ou seja, para essa estrutura o espaço é importante para o funcionamento correto. 
+
+
 | TOKEN#RES - Palavra reservada            |
  ------------------------------------------
 | ```TOKEN#RES#palavra_reservada#numero_linha``` |
