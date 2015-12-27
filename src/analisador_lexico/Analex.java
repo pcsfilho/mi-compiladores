@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * @author Paulo Filho, Rejanio Moraes
- * @version 1.1.0
+ * @version 1.1.1
 */
 public class Analex{
     private FileReader fileR;//atributo de leitura de arquivo
