@@ -15,7 +15,7 @@ fazer alguma alteração no código presente na pasta src deve-se instalar o amb
 Para executar o .jar do projeto deve-se acessar a pasta do projeto mi-compiladores utilizando o shell e executar o comando:
 
 ```bash
- java -jar analisador_lexico.jar
+   java -jar analisador_lexico.jar
 ```
 
 Arquivos presentes
