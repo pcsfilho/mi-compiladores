@@ -1,2 +1,2 @@
-Analisador lexico
-versão 1.1.0
+﻿Analisador lexico
+versão 1.1.1
