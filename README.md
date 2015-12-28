@@ -5,14 +5,14 @@ foi utilizado a versão 1.8 do JAVA.
 
 Autor: Paulo Cezar dos Santos Filho(paulo.ecomp@gmail.com)
 
-Autor: Rejanio Moraes Filho.(rejaniomoraes@gmail.com)
+Autor: Rejanio N. Moraes Filho.(rejaniomoraes@gmail.com)
 
 Execução do código fonte
 ------------------------
 
 Para executar o analisador léxico é necessario ter instalado em sua máquina no minimo o ambiente de execução JAVA. Caso queira
-fazer alguma alteração no código presente na pasta src deve-se instalar o ambiente de desenvolvimento JAVA para imlementação e simulação.
-Para executar o .jar do projeto deve-se acessar a pasta do projeto mi-compiladores utilizando o shell e executar o comando:
+fazer alguma alteração no código presente na pasta src deve-se instalar o ambiente de desenvolvimento JAVA para implementação e simulação.
+Para executar o .jar do projeto deve-se acessar a pasta do projeto analisador_lexico utilizando o shell e executar o comando:
 
 ```bash
    java -jar analisador_lexico.jar
