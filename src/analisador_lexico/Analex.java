@@ -368,27 +368,30 @@ public class Analex{
                     }
 // lógica para cadeia constante      
 //***************************************************************************************************                                        
-                    // verifica se tem as aspas duplas para poder verificar os próximos caracteres 
+                    // Verifica se tem as aspas duplas para poder verificar os próximos caracteres 
                     else if(current_char == '"'){
                         //string que vai armazenar a cadeia constante e exibir para o usuário   
-                        String cadeia=""+current_char;
+                        String cadeia="";
                         if((iterador_caracteres+1)<row_size){
                             current_char=linha.charAt(iterador_caracteres+1);
                         }
+                        
                         cadeia = cadeia+current_char;
                         iterador_caracteres++;
                         boolean erro=false;
                         // percorrendo toda a cadeia constante até achar o delimitador 
                         while(current_char !='"'){
                             if((iterador_caracteres+2)<=row_size){
-                               current_char = linha.charAt(iterador_caracteres+1);//ler o primeiro caracter   
+                                current_char = linha.charAt(iterador_caracteres+1);//ler o primeiro caracter 
+                                if((int)current_char!=34){
+                                    cadeia = cadeia+current_char;
+                                }                                                        
                             }else{
                                 erro=true;
                                 break;
-                            }                        
-                            cadeia = cadeia+current_char;
+                            }                      
                             iterador_caracteres++;
-                        }
+                        }                        
                         if(erro){
                             occurred_error=true;//ocorreu um erro lexico.
                             System.out.printf("Erro Cadeia constante não fechou Linha "+num_linha+"\n");
@@ -396,62 +399,42 @@ public class Analex{
                         }else{
                             System.out.printf("TOKEN#CAD#"+cadeia+"#"+num_linha+"\n");
                             writeFile.write("TOKEN#CAD#"+cadeia+"#"+num_linha+"\n");
-                        }                   
+                        }
                     }
 // lógica para caractere constante                          
 //***************************************************************************************************                                        
                     else if(current_char==39){
-                        String caracter=""+current_char;
+                        String caracter="";
                         //// vendo se o iterador +1 é em branco e tratando isso com o else
-                        if((int)(iterador_caracteres+1)!=32){
-                          // verificando se estão na faixa de parametro aceita pela estrutura lexica
-                          if(isDigit(linha.charAt(iterador_caracteres+1))||isLetter(linha.charAt(iterador_caracteres+1))){
-                                   //verificando se o iterador +2 é diferente de espaço em branco 
-                                    if((int)(iterador_caracteres+2)!=32){
-                                      //veirificando se o próximo caracter é uma aspas simples ,dessa forma checando se o usuário fechou a constante
-                                      if(linha.charAt(iterador_caracteres+2)==39){
-                                           // reconhecendo um caracter constante   
-                                           caracter=caracter+linha.charAt(iterador_caracteres+1);
-                                           caracter=caracter+linha.charAt(iterador_caracteres+2);
-                                          System.out.printf("TOKEN#CAR#"+caracter+"#"+num_linha+"\n");
-                                          writeFile.write("TOKEN#CAR#"+""+caracter+"#"+num_linha+"\n");
-                                          iterador_caracteres=+2;
-                                      }
-                                      else{
-                                          // mostando a mensagem de erro na construção de caracter constante
-                                          caracter=caracter+linha.charAt(iterador_caracteres+1);
-                                          occurred_error=true;//ocorreu um erro lexico.
-                                          System.out.printf("Erro Lexico o Terceiro caracter não é uma aspas simples %s Linha %d\n",caracter, num_linha);
-                                          writeFile.write("Erro Lexico o Terceiro caracter não é uma aspas simples "+caracter+" Linha "+num_linha+"\n");
-                                          iterador_caracteres=+2;
-                                          break;
-                                      }
-                                }
-                                //erro o terceiro caracter é um espaço em branco o else trata isso e passa a mensagem para o usuário
-                                else{
-                                  //mostrar para o usuário até que ponto tava a construnção do token 
-                                      caracter=caracter+linha.charAt(iterador_caracteres+1);
-                                      occurred_error=true;//ocorreu um erro lexico.
-                                      System.out.printf("Erro Lexico não fechou o caracter %s Linha %d\n",caracter, num_linha);
-                                      writeFile.write("Erro Lexico não fechou o caracter "+caracter+" Linha "+num_linha+"\n");
-                                      iterador_caracteres=+2;
-                                }
-                          }
-                          else{
-                              ///quando tem caracter não aceito pela estrutura de caracter constante
-                               occurred_error=true;//ocorreu um erro lexico.
-                              System.out.printf("Erro Lexico contém caracter não aceito %s Linha %d\n",caracter, num_linha);
-                              writeFile.write("Erro Lexico contém caracter não aceito "+caracter+" Linha "+num_linha+"\n");
-                              iterador_caracteres=+2;
-                              break;
-                          }
-                          }else{
-                              // quando o segundo caracter é um espaço em branco 
-                               occurred_error=true;//ocorreu um erro lexico.
-                               System.out.printf("Erro Lexico contém caracter não aceito %s Linha %d\n",caracter, num_linha);
-                               writeFile.write("Erro Lexico contém caracter não aceito "+caracter+" Linha "+num_linha+"\n");
-                              iterador_caracteres=+2;
-                          }
+                        if((iterador_caracteres+1)<row_size){
+                            current_char = linha.charAt(iterador_caracteres+1);
+                        }
+                        if((iterador_caracteres+2)<row_size){
+                            next_char = linha.charAt(iterador_caracteres+2);//ler a ultima aspas 
+                        }                       
+                                                
+                        if((current_char=='\n') || (next_char!=39)){
+                            occurred_error=true;//ocorreu um erro lexico.
+                            System.out.printf("Erro Lexico caractere não fechado Linha %d\n", num_linha, next_char);
+                            writeFile.write("Erro Lexico caractere não fechado Linha "+num_linha+ "\n");
+                            iterador_caracteres+=1;
+                        }else if(!(((int)current_char==32) || ((int)current_char==9) || ((int)current_char==11) || ((int)current_char==13))
+                                &&((int)next_char==39) && ((int)current_char!=39)){
+                            caracter=caracter+current_char;                            
+                            System.out.printf("TOKEN#CAR#"+caracter+"#"+num_linha+"\n");
+                            writeFile.write("TOKEN#CAR#"+""+caracter+"#"+num_linha+"\n");
+                            iterador_caracteres+=2;
+                        }else if(((int)current_char==39) && ((int)next_char==39)){
+                            occurred_error=true;//ocorreu um erro lexico.
+                            System.out.printf("Erro Lexico caractere não pode ser Vazio Linha %d\n", num_linha);
+                            writeFile.write("Erro Lexico caractere não pode ser Vazio Linha "+num_linha+ "\n");
+                            iterador_caracteres+=2;
+                        }else{
+                            occurred_error=true;//ocorreu um erro lexico.
+                            System.out.printf("Erro Lexico Tamanho inválido Linha %d\n", num_linha);
+                            writeFile.write("Erro Lexico Tamanho inválido Linha "+num_linha+ "\n");
+                            iterador_caracteres+=2;
+                        }
                     }
 //Lógica para Operadores
 //******************************************************************************************************
