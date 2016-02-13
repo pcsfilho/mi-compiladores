@@ -279,93 +279,129 @@ public class Analex{
 //Lógica para  verificar números negativos
 //***************************************************************************************************                    
                     //verifica se atual é um - e o próximo é um número para entrar na lógica
-                    else if(isDigit(next_char) && (int)current_char == 45  ){
-                        String numero;
-                        numero=""+current_char;
-                        current_char=next_char;
-                      
-                        iterador_caracteres++;
-                       //percorrendo os caracteres
-                        while(isDigit(current_char) && iterador_caracteres+1<row_size){
-                            numero=numero+current_char;
-                            
-                            iterador_caracteres++;
-                            current_char=linha.charAt(iterador_caracteres);
-                           }
-                        //parte fracionario
-                        if ((int)current_char == 46) {
-                            numero = numero + current_char;
-                            //verifica pra não dar erro de espaço em branco
-                            if (iterador_caracteres + 1 < row_size) {
-                                //  verificar se é número
+                 
+  else if(isDigit(next_char) && (int)current_char == 45  ){
+                        String temp="";
+                        temp=temp+current_char;
+                        //current_char=next_char;
+                         // current_char  
+  ////                     
+                iterador_caracteres++;    
+                 current_char=linha.charAt(iterador_caracteres);
+ 
+                        //Percorre parte inteira do número e armazena
+                        while(isDigit(current_char)){
+                            if(iterador_caracteres+1<row_size){
+                                temp=temp+current_char;
                                 iterador_caracteres++;
-                                current_char = linha.charAt(iterador_caracteres);
-                                //System.out.printf("valor de current" + current_char + "\n");
-                                while (isDigit(current_char) && iterador_caracteres + 1 < row_size) {  
-                                    numero = numero + current_char;                             
-                                    iterador_caracteres++;
-                                    current_char = linha.charAt(iterador_caracteres);
-                                }
-                                //adicionando o ultimo numero q não entra na contagem                                
-                                //Se o atual caracter for um número adicionar na variável número(token)
-                                if(isDigit(current_char)){
-                                    numero = numero + current_char;
-                                    System.out.printf("TOKEN#NUM_F#"+""+numero+"#"+num_linha+"\n");
-                                    writeFile.write("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
-                                    iterador_caracteres++;
-                                }
-                                // quando o atual for em branco 
-                                else if ((int)current_char == 32){
-                                    System.out.printf("TOKEN#NUM_F#"+""+numero+"#"+num_linha+"\n");
-                                    writeFile.write("TOKEN#NUM_F#"+numero+"#"+num_linha+"\n");
-                                }
-                              //quando entrar algo errado no número.
-                              else if(!isDigit(current_char)){
-                                //registrando o erro no número 
-                                numero=numero+current_char;
-                                //percorrendo a string errada até terminar 
-                                while((int)current_char !=32  && iterador_caracteres +1 < row_size){
-                                    iterador_caracteres++;
-                                    current_char = linha.charAt(iterador_caracteres);
-                                    numero = numero + current_char;
-                                }
-                                occurred_error=true;//ocorreu um erro lexico.
-                                 System.out.printf("Erro Lexico Numero mal formado %s Linha %d\n",numero, num_linha);
-                                 writeFile.write("Erro Lexico Numero mal formado "+numero+" Linha "+num_linha+"\n");
-                            }
-                            
-                            }
+                                current_char= current_char=linha.charAt(iterador_caracteres);                                
+                            }else{
+                                iterador_caracteres=row_size;
+                                break;
+                            }                                                         
+                        }                        
+                        //Pega o ultimo caractere caso seja digito
+                        if(isDigit(current_char)){
+                            temp=temp+current_char;
                         }
-                        //quando não tiver a parte de fração 
-                        else{
-                            // quando o último caracter não for número
-                            if( (int)current_char == 32 ){
-                                 System.out.printf("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
-                                 writeFile.write("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
-                            }
-                            //passando quando o atual é um número e tá na estrutura correta
-                            else if(isDigit(current_char)){
-                                numero = numero + current_char;
-                                System.out.printf("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
-                                writeFile.write("TOKEN#NUM_I#"+numero+"#"+num_linha+"\n");
-                                iterador_caracteres++;
-                            }
-                         //quando o atual não é um dígito , ou seja, o número não estar na estrutura correta
-                            else if(!isDigit(current_char)){
-                                //registrando o erro no número 
-                                numero=numero+current_char;
-                                //percorrendo a string errada até terminar 
-                                while((int)current_char !=32  && iterador_caracteres +1 < row_size){
-                                    iterador_caracteres++;
-                                    current_char = linha.charAt(iterador_caracteres);
-                                    numero = numero + current_char;
+                        //Testa se há a parte fracionaria
+                        if((int)current_char==46){
+                            int cont_frac=0;//Conta quantos numeros tem depois do ponto flutuante, se tiver.
+                            temp=temp+current_char;//armazena o ponto fracionario
+                            //Testa se há mais caracteres na linha
+                            if(iterador_caracteres+1<row_size){
+                                iterador_caracteres++;//pula para o proximo
+                                current_char=linha.charAt(iterador_caracteres);//pega o caractere atual
+                                //Enquanto for digito e tiver mais caracteres na linha
+                                while(isDigit(current_char)){
+                                    if(iterador_caracteres+1<row_size){
+                                        cont_frac++;//incrementa parte fracionaria
+                                        temp=temp+current_char;
+                                        iterador_caracteres++;//proxima iteração de caractere                
+                                        current_char= current_char=linha.charAt(iterador_caracteres);//atualiza o caracter atual
+                                    }else{
+                                        iterador_caracteres=row_size;
+                                        break;
+                                    }
+                                }                                
+                                //Se o ultimo caractere iterado for um digito
+                                if(isDigit(current_char)){
+                                    temp=temp+current_char;
+                                    cont_frac++;
+                                //Se não é um caractere invalido
+                                }else if(!(isDelimiter(current_char) || (int)current_char==32 || isOperator(""+current_char)) || (int)current_char==46){
+                                    cont_frac=0;
+                                    int cont_err=0;//conta quantas vezes houve erro
+                                    while((!(isDelimiter(current_char) || (int)current_char==32 || isOperator(""+current_char)) || (int)current_char==46) && iterador_caracteres+1<row_size){
+                                        temp=temp+current_char;
+                                        iterador_caracteres++;
+                                        current_char=linha.charAt(iterador_caracteres);
+                                        //Testa se a linha acabou, caso sim pega o ultimo caractere concatena 
+                                        //ao temp e iguala o iterador ao tamanho da linha para poder ir para o proxima linha
+                                        if(iterador_caracteres+1>=row_size && (!(isDelimiter(current_char) || (int)current_char==32 || isOperator(""+current_char))|| (int)current_char==46)){
+                                           iterador_caracteres=row_size; 
+                                           temp=temp+current_char;
+                                        }
+                                        cont_err++;
+                                    }                                    
+                                    if(cont_err==0){
+                                        temp=temp+current_char;//concatena ultimo caractere errado ao temp
+                                        iterador_caracteres++;
+                                    }
                                 }
+                            }else{
+                                iterador_caracteres=row_size; //Como foi o ultimo caractere isso é feito para pular a linha na proxima iteração
+                            }                         
+                            if(cont_frac>0){
+                                System.out.printf("TOKEN#NUM_F#"+temp+"#"+num_linha+"\n");
+                                writeFile.write("TOKEN#NUM_F#"+temp+"#"+num_linha+"\n");
+                                iterador_caracteres--;         
+                            }else{
                                 occurred_error=true;//ocorreu um erro lexico.
-                                 System.out.printf("Erro Lexico Numero mal formado %s Linha %d\n",numero, num_linha);
-                                 writeFile.write("Erro Lexico Numero mal formado "+numero+" Linha "+num_linha+"\n");
-                            }    
-                      }
-                    }
+                                System.out.printf("Erro Lexico Numero mal formado %s Linha %d\n",temp, num_linha);
+                                writeFile.write("Erro Lexico Numero mal formado com caracter Invalido "+temp+" Linha "+num_linha+"\n");
+                                iterador_caracteres--; 
+                            }
+                        //ELSE para numero inteiro
+                        }else{
+                            //Testa se é um numero inteiro válido verificando se o proximo caractere é o fim de um inteiro: espaço delimitador ou operador
+                            if(isOperator(""+current_char) || isDelimiter(current_char) || (int)current_char==32 || iterador_caracteres==row_size){
+                                System.out.printf("TOKEN#NUM_I#"+temp+"#"+num_linha+"\n");
+                                writeFile.write("TOKEN#NUM_I#"+temp+"#"+num_linha+"\n");
+                                iterador_caracteres--;//volta uma posição para pegar o espaço delimitador ou operador na próxima verificação
+                            }else{
+                                    /*Percorre a linha após a partir do ponto colocado errado até consumir 
+                                    todos caracteres pertencentes ao numero errado*/ 
+                                    temp=temp+current_char;
+                                    while(iterador_caracteres+1<row_size){
+                                        iterador_caracteres++;
+                                        current_char=linha.charAt(iterador_caracteres);//pega o caractere atual
+                                        
+                                        if(isDelimiter(current_char) || (int)current_char==32 || isOperator(""+current_char)){
+                                            iterador_caracteres--; 
+                                            break;
+                                        }
+                                        temp=temp+current_char;
+                                    }
+                                    occurred_error=true;//ocorreu um erro lexico.
+                                    System.out.printf("Erro Lexico Número mal formado: %s - linha: %d\n",temp,num_linha);
+                                    writeFile.write("Erro Lexico Numero mal formado com caracter invalido "+temp+" Linha "+num_linha+"\n");
+                            }                            
+                        }                        
+       
+  
+  ///
+  }                   
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
 // lógica para cadeia constante      
 //***************************************************************************************************                                        
                     // Verifica se tem as aspas duplas para poder verificar os próximos caracteres 
@@ -603,5 +639,7 @@ public class Analex{
         } catch (IOException e) {
             System.err.printf("Erro na leitura do arquivo: %s.\n", e.getMessage());
         }        
+    
+
     }    
 }
