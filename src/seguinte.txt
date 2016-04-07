@@ -1,0 +1,8 @@
+<exp>#)#;#,
+<exp_valor>#<#>#==#!=#&&#!#true#false#numero#ponto_flutuante#id#(#;#new#||#+#-#*#/#%
+<exp_sufixo>#)#;#,
+<F>#)#;#,
+<G>#<#>#==#!=#&&#!#true#false#numero#ponto_flutuante#id#(#;#new#||#+#-#*#/#%
+<T>#!#true#false#numero#ponto_flutuante#id#(#;#new
+<atribuicao2>#;
+<retorno_sufixo>#;

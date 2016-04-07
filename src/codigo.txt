@@ -1,0 +1,6 @@
+const{
+    int a=2;
+    char b='c';
+    bool d=true;
+}
+id>(5*t)*

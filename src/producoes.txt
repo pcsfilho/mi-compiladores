@@ -1,0 +1,52 @@
+<programa>#<constante> <programa>#<variavel> <programa>#<mainclass> <classe>
+<mainclass>#class id <heranca> { <main>  <cg1> }
+<classe>#class id <heranca> { <cg1> } <classe> #vazio
+<heranca>#( id )#vazio
+<constante>#const { <DC> }
+<DC>#<tipo> id = <valor> ; <DC> #vazio
+<tipo>#int#float#bool#char
+<valor>#<valorN>#<valorB>#<valorL>
+<valorN>#numero#pontoflutuante
+<valorB>#true#false
+<valorL>#cadeiaconstante#caractere
+<variavel>#<tipo> id <variavelinha>#<declara_vetor>
+<variavelinha>#, id <variavelinha>#;
+<declara_vetor>#<tipo> id [ <expN> ] <col> ;
+<col>#[ <expN> ] <col> #vazio
+<expN>#<termo> <restoExp>
+<restoExp>#+ <termo> <restoExp>#­ <termo> <restoExp>#vazio
+<termo>#<fator> <restoTermo>
+<restoTermo>#* <fator> <restoTermo>#/ <fator> <restoTermo>#% <fator> <restoTermo>#vazio
+<fator>#<valorN>#id <D>#%#<vetor>#<chamarMetodo>#( <expN> )
+<D>#. id#vazio
+<exp>#<exp_valor> <F>#! <exp>
+<F>#<exp_sufixo>#vazio
+<exp_valor>#<valorB>#<valorN>#id <G>#( <exp> )#<chamarMetodo>#<vetor>
+<G>#. id#vazio
+<exp_sufixo>#< <T> <exp>#> <T> <exp>#== <exp>#!= <exp>#&&#<exp>#|| <exp>#+ <exp>#­ <exp>#* <exp>#/ <exp>#% <exp>
+<T>#=#vazio
+<vetor>#id [ <expN> ] <col>
+<cg1>#<variavel> <cg1>#<metodo> <cg1>#! <atribuicao> <cg1> #vazio
+<atribuicao>#id = <atribuicao2> ;#<vetor> = <atribuicao2> ;
+<atribuicao2>#<valorL>#<exp>#<instanciar>
+<main>#void main ( ) { <cg2> }
+<cg2>#<atribuicao> <cg2>#<variavel> <cg2>#<comando> <cg2>#<exp> ; <cg2> # <chamarMetodo> ; <cg2>#<instanciar> ; <cg2>#vazio
+<comando>#<if>#<while>#<write>#<read>
+<if>#if ( <exp> ) { <cg2> <return> } <else>
+<else>#else { <cg2> <return> }#vazio
+<while>#while ( <exp> ) { <cg2> }
+<write>#write ( <argumentos> ) ;
+<read>#read ( <argumentosVar> ) ;
+<metodo>#<tipo> id ( <parametro> ){ <cg2> <return> }#void id ( <parametro> ){ <cg2> }
+<parametro>#<tipo> id <parametro2>#vazio
+<parametro2>#, <tipo> id <parametro2>#vazio
+<argumentos>#<exp> <argumentos2>#<valorL> <argumentos2>#vazio
+<argumentos2>#, <argumentos>#vazio
+<argumentosVar>#id <argumentosVar2>
+<argumentosVar2>#, <argumentosVar>#vazio
+<return>#return <returnSufixo> ;#vazio
+<returnSufixo>#<exp>#<valorL>
+<chamarMetodo>#id . <chamarMetodo2>#<chamarMetodo2>
+<chamarMetodo2>#id ( <argumentos> ) <chamarMetodoEncadeado>
+<chamarMetodoEncadeado>#. <chamarMetodo2>#vazio
+<instanciar>#new id ( <argumentos> )

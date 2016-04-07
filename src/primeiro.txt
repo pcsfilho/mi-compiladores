@@ -1,0 +1,6 @@
+<exp>#!#true#false#numero#ponto_flutuante#id#(#;#new
+<exp_valor>#true#false#numero#ponto_flutuante#id#(#;#new
+<exp_sufixo>#<#>#==#!=#&&#!#true#false#numero#ponto_flutuante#id#(#;#new#||#+#-#*#/#%
+<F>#<#>#==#!=#&&#!#true#false#numero#ponto_flutuante#id#(#;#new#||#+#-#*#/#%#vazio
+<G>#.#vazio
+<T>#=#vazio
