@@ -116,14 +116,6 @@ public class FirstAndFollow {
     void follow(String nTerminal){
         
     }
-    
-    
-    public static void main(String[] args){             
-        try {
-            FirstAndFollow t= new FirstAndFollow();
-            t.nTerminais();
-        } catch (FileNotFoundException e) {
-            System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-        }
-    }    
+   
+     
 }

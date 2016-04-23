@@ -24,15 +24,9 @@ public class Analex{
      * o vetor de palavras reservadas para o analisador léxico.
      * @throws java.io.FileNotFoundException
     */
-    public Analex() throws FileNotFoundException,IOException{
+    public Analex(String[] words) throws FileNotFoundException,IOException{
         openFiletoRead();
-        reservedsWords= new String[18];        
-        reservedsWords[0]= "class";reservedsWords[1]= "const"; reservedsWords[2]= "else";
-        reservedsWords[3]= "if";reservedsWords[4]= "new";reservedsWords[5]= "read";
-        reservedsWords[6]= "write";reservedsWords[7]= "return";reservedsWords[8]= "void";
-        reservedsWords[9]= "while";reservedsWords[10]= "int";reservedsWords[11]= "float";
-        reservedsWords[12]= "bool";reservedsWords[13]= "string";reservedsWords[14]= "char";
-        reservedsWords[15]= "true";reservedsWords[16]= "false";reservedsWords[17]= "main";
+        reservedsWords= words;
         occurred_error=false;
     }
     
@@ -43,8 +37,8 @@ public class Analex{
     */
     private void openFiletoRead() throws FileNotFoundException{
         //Abre arquivo para leitura
-        if(new File("../mi-compiladores/src/analisador_lexico/codigo.txt").canRead()){
-            fileR = new FileReader("../mi-compiladores/src/analisador_lexico/codigo.txt");
+        if(new File("../compilador/src/codigo.txt").canRead()){
+            fileR = new FileReader("../compilador/src/codigo.txt");
             readFile = new BufferedReader(fileR);
         }else{
             System.out.print("O arquivo de leitura não pode ser lido\n");
@@ -57,9 +51,9 @@ public class Analex{
     private void openFiletoWrite() throws IOException{
         //Abre arquivo para leitura
         //construtor que recebe o objeto do tipo arquivo
-        fileW = new FileWriter(new File("lexOut.txt"));
+        fileW = new FileWriter(new File("../compilador/src/outLex.txt"));
                 
-        if(new File("lexOut.txt").canRead()){
+        if(new File("../compilador/src/outLex.txt").canRead()){
             //construtor recebe como argumento o objeto do tipo FileWriter
             writeFile = new BufferedWriter(fileW);
         }else{
@@ -123,7 +117,12 @@ public class Analex{
                 return true;
         }          
         return false;
-    }   
+    }
+    
+    public String[] get_reservedsWords(){
+        return reservedsWords;
+    }
+    
     /**
     Este é o método principal da classe Analex, pois é este que recebe um arquivo fonte para análise léxica e 
     * e gera um arquivo de saída com os tokens e lexemas das cadeias de entrada. Este método possui dois laços
@@ -131,7 +130,7 @@ public class Analex{
     * caractere a caractere para verificar os padrões contidos nas condicionais. Verificado cada padrão este método 
     * escreve em um arquivo de saída os determinados tokens e lexemas.
     */
-    private void analiser() throws IOException{     
+    public void analiser() throws IOException{     
             //abre arquivo para escrita
             openFiletoWrite();
             //Armazena uma linha do arquivo
@@ -617,7 +616,7 @@ public class Analex{
             }//fecha loop de linha
             //Se não ocorrer nenhum erro léxico exibe mensagem de Sucesso no fim do arquivo.
             if(!occurred_error){
-                writeFile.write("Sucesso\n");
+                //writeFile.write("Sucesso\n");
                 System.out.printf("Sucesso\n");
             }
             //fecha os recursos de stream
@@ -625,21 +624,7 @@ public class Analex{
             readFile.close();
             writeFile.close();
             fileW.close();
+            
     }        
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args){             
-        try {
-            Analex analex;
-            analex = new Analex();
-            analex.analiser();
-        } catch (FileNotFoundException e) {
-            System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-        } catch (IOException e) {
-            System.err.printf("Erro na leitura do arquivo: %s.\n", e.getMessage());
-        }        
     
-
-    }    
 }

@@ -18,7 +18,3 @@
 <heranca>#{
 <cg2>#}
 <return>#}
-<constante>#const#int#float#bool#char#class
-<DC>#}
-<programa>#$#
-<variavel>#const#class#int#float#bool#char#void#!#int#float#bool#char#if#while#read#write#!#true#false#NUM_I#NUM_F#(#;#new

@@ -9,22 +9,25 @@ package analisador_sintatico;
  * @author Paulo
  */
 public class Token{
-    private String tipo;
-    private String lexema;
-    private String linha;    
-    
+    private String tipo;//Este atributo ira guarda o tipo da variavel(int,char,bool,float)
+    private String lexema;//Guarda o conteudo do token
+    private String linha;//Guarda a linha da ocorrencia do token    
+    private int escopo;//Guarda o escopo do token
+    private String padrao;//Guarda a classificação do token(RES,CAD,CAR,NUM_I,NUM_F)
     public Token(){
         tipo="";
         lexema="";
         linha="";
+        padrao="";
+        escopo=0;
     }
     
     public Token(String token){
         splitToken(token);
     }
     
-    public String get_tipo(){
-        return this.tipo;
+    public String get_padrao(){
+        return this.padrao;
     }
     
     public String get_lexema(){
@@ -37,11 +40,10 @@ public class Token{
     
     private void splitToken(String token){
         String[] separated = token.split("#");
-        this.tipo=separated[1];
+        this.padrao=separated[1];
         
         this.lexema=separated[2];
         
         this.linha=separated[3];
-        
     }
 }

@@ -1,5 +1,5 @@
 package analisador_sintatico;
-import analisador_lexico.Analex;
+import analisador_semantico.Semantico;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,26 +18,50 @@ public class Sintatico{
     private Scanner scanner;//atributo de buffer de leitura de arquivo
     private FileWriter fileW;//atributo de escrita de arquivo
     private BufferedWriter writeFile;//atributo de buffer de escrita de arquivo
-    private Token currentToken;
-    private Hashtable<String,ArrayList> conjuntoSeguinte;
-    private Hashtable<String,ArrayList> conjuntoPrimeiro;
+    private Token currentToken;//armazena o token atual a ser analisado
+    private int position;//armazena a posição atual do token
+    private ArrayList<Token> listaTokens;//lista de tokens do analisador lexico;
+    private Hashtable<String,ArrayList> conjuntoSeguinte;//armazena o conjunto seguinte de cada não terminal
+    private Hashtable<String,ArrayList> conjuntoPrimeiro;//armazena o conjunto primeiro de cada não terminal
+    private Semantico sem;
+    private boolean error;//armazena um erro sintatico caso ocorra. 
+    private String[] reservedsWords;
     /**
-     * Este mÃ©todo inicializa os atributos da classe Analex. Abre o arquivo de leitura e inicializa
-     * o vetor de palavras reservadas para o analisador lÃ©xico.
+     * Este método inicializa os atributos da classe Sintatico. Abre o arquivo de leitura e inicializa
+     * o array de tokens para a analise sintatica. Tambem inicialisa o conjunto seguinte e primeiro.
      * @throws java.io.FileNotFoundException
     */
-    public Sintatico() throws FileNotFoundException,IOException{
-        scanner=openFiletoRead("../analisador_sintatico/src/outLex.txt");
-        currentToken = new Token();
+    public Sintatico(String words[]) throws FileNotFoundException,IOException{
+        init_lista_tokens();
         conjuntoSeguinte=new Hashtable<String,ArrayList>();
         conjuntoPrimeiro=new Hashtable<String,ArrayList>();
+        sem = new Semantico();
+        reservedsWords= words;
         init_seguinte_primeiro();
+        error=false;
     }
-    
     /**
-    Este mÃ©todo abre o arquivo de leitura do analisador lÃ©xico. Caso o arquivo nÃƒÂ£o possa
-    * ser lido ele apresenta uma mensagem de erro de leitura.
-    * @throws java.io.FileNotFoundException
+    *Le todos os tokens do analex e armazena em uma lista de tokens
+    *@throws FileNotFoundException
+    *@throws IOException 
+    */
+    private void init_lista_tokens() throws FileNotFoundException,IOException{
+        listaTokens=new ArrayList<Token>();
+        position=0;
+        scanner = openFiletoRead("../compilador/src/outLex.txt");
+        String temp;
+        while(scanner.hasNext()){
+            String token = scanner.nextLine(); 
+            listaTokens.add(new Token(token));//cria um objeto Token para armazenar as informações(tipo, lexema, linha)
+        }
+        if(listaTokens.size()>0){
+            currentToken=listaTokens.get(0);
+        }
+    }
+    /**
+    Este metodo abre o arquivo de leitura do analisador lexico. Caso o arquivo nao possa
+    *ser lido ele apresenta uma mensagem de erro de leitura.
+    *@throws java.io.FileNotFoundException
     */
     private Scanner openFiletoRead(String path) throws FileNotFoundException{
         //Abre arquivo para leitura
@@ -47,33 +71,31 @@ public class Sintatico{
             reader = new Scanner(fileR);
             return reader; 
         }else{
-            System.out.print("O arquivo de leitura nÃ£o pode ser lido\n");
+            System.out.print("O arquivo de leitura nao pode ser lido\n");
             return null;
         }
     }
     /**
-    Este mÃ©todo abre o arquivo de leitura do analisador lÃ©xico. Caso o arquivo nÃƒÂ£o possa
+    Este metodo abre o arquivo para escrita do analisador sintatico. Caso o arquivo nao possa
     * ser lido ele apresenta uma mensagem de erro de leitura.
     */
     private void openFiletoWrite() throws IOException{
         //Abre arquivo para leitura
         //construtor que recebe o objeto do tipo arquivo
-        fileW = new FileWriter(new File("../analisador_sintatico/src/sintOut.txt"));
-                
-        if(new File("../analisador_sintatico/src/sintOut.txt").canRead()){
+        fileW = new FileWriter(new File("../compilador/src/sintOut.txt"));
+        if(new File("../compilador/src/sintOut.txt").canRead()){
             //construtor recebe como argumento o objeto do tipo FileWriter
             writeFile = new BufferedWriter(fileW);
         }else{
             System.out.print("O arquivo de Escrita nÃ£o pode ser aberto\n");
         }
     }
-    
     /**
-     * retorna os seguintes de um não terminal
+     * Iniciacila uma tabela HASH para os seguintes e uma para os primeiros de cada não terminal a partir da leitura de um arquivo, para
+     * seguintes e primeiros.
      */
     private void init_seguinte_primeiro() throws FileNotFoundException{
-        Scanner reader=openFiletoRead("../analisador_sintatico/src/seguinte.txt");
-        
+        Scanner reader=openFiletoRead("../compilador/src/seguinte.txt");
         String temp;
         String[] split;
         ArrayList arrayTemp;
@@ -85,14 +107,11 @@ public class Sintatico{
                 if(i!=0){
                     arrayTemp.add(split[i]);
                 }
-                //if(arrayTemp.size()>0)
-                    //System.out.println(split[0] +"=>"+arrayTemp.get(i-1));
             }
             conjuntoSeguinte.put(split[0], arrayTemp);
         }
         //Primeiro
-        reader=openFiletoRead("../analisador_sintatico/src/primeiro.txt");
-        
+        reader=openFiletoRead("../compilador/src/primeiro.txt");
         while(reader.hasNext()){
             temp=reader.nextLine();
             split=temp.split("#");
@@ -101,39 +120,40 @@ public class Sintatico{
                 if(i!=0){
                     arrayTemp.add(split[i]);
                 }
-                
             }
             conjuntoPrimeiro.put(split[0], arrayTemp);
         }
-        
     }
     /**
-     * Retorna uma lista do conjunto seguinte do nao terminal passado como parametro
+     * Retorna uma lista do conjunto primeiro de um determinado nao terminal passado como parametro
      * @param nTerminal
-     * @return 
-     */
-    private ArrayList get_seguinte(String nTerminal){
-        return conjuntoSeguinte.get(nTerminal);
-    }
-    
-    /**
-     * Retorna uma lista do conjunto primeiro do nao terminal passado como parametro
-     * @param nTerminal
-     * @return 
+     * @return lista de primeiros do @param
      */
     private ArrayList get_primeiro(String nTerminal){
         return conjuntoPrimeiro.get(nTerminal);
     }
-    
-    
     /**
-    * Este método retorna se há um proximo token(true ou false) e cria o objeto 
+    *Verifica se é uma palavra reservada 
+    */
+    /**
+     Este metodo recebe uma String como parametro e verifica se esta Ã© uma palavra reservada. 
+     * Se sim retorna true
+     * @param word
+     * @return true se Ã© uma palavra reservada
+     */
+    private boolean isReservedWord(String word){           
+        for (int i = 0; i <reservedsWords.length; i++) {
+            if(word.equals(reservedsWords[i]))
+                return true;
+        }          
+        return false;
+    }
+    /**
+    * Este método retorna se há um proximo token(true ou false) na lista de tokens
     * para este novo token(Token)
     */
-    private boolean next_token(){
-        if(scanner.hasNext()){//testa se tem um novo token
-            String token = scanner.nextLine();            
-            currentToken = new Token(token);//cria um objeto Token para armazenar as informações(tipo, lexema, linha)
+    private boolean has_next_token(){
+        if(position+1<listaTokens.size()){//testa se tem um novo token
             return true;
         }
         return false;
@@ -142,384 +162,253 @@ public class Sintatico{
      * Este método retorna o token atual
      * @return Token
     */
-    private Token get_token(){
+    private Token get_current_token(){
         return currentToken;
     }
+    /**
+     * Este metodo retorna uma posiçao no array de tokens
+     */
+    private void back_token(){
+        position--;
+        if(position>=0)
+            currentToken=listaTokens.get(position);
+    } 
+    /**
+    * Este metodo avanca uma posiçao no array de tokens
+    */
+    private void ahead_token(){
+        position++;
+        if(position<listaTokens.size()){
+            currentToken=listaTokens.get(position);
+        }
+    }
     
-    //Função para ser implementada no futuro e tratar vazios com o conjunto seguinte
+    private Token get_next_token(){
+        if(position+1<listaTokens.size()){
+            return listaTokens.get(position+1);
+        }else{
+            return currentToken;
+        }
+    } 
+    /**Este método verifica se um terminal passado como parametro pertence ao conjunto seguinte de um não terminal
+    */ 
     private boolean contains_seguinte(String nTerminal,String terminal){
-        ArrayList arrayTemp=get_seguinte(nTerminal);
+        ArrayList arrayTemp=conjuntoSeguinte.get(nTerminal);
+        if(arrayTemp!=null){
+            return arrayTemp.contains(terminal);
+        }
+        return false;
+    }  
+    /**Este método verifica se um terminal passado como parametro pertence ao conjunto primeiro de um não terminal
+    */
+    private boolean contains_primeiro(String nTerminal,String terminal){
+        ArrayList arrayTemp = get_primeiro(nTerminal);
         return arrayTemp.contains(terminal);
+    }
+
+    /******************************************Nao Terminais************************************************************
+     * Cada nao terminal da gramatica possui um metodo para a analise sintatica. Sendo que a verificação dos terminais é 
+     * feita a partir de testes de verdadeiro ou falso para um token atual. A cada verificacao verdadeira o token é atualizado 
+     * de acordo com a lista de tokens armazenado em list_tokens. Usa-se o metodo has_next_token para verificar se existe um proximo token 
+     * a ser verificado. Usa-se o metodo para ahead_token para avancar para o proximo token. 
+     * Caso exista um vazio na gramatica este é testado verificando o seguinte do não terminal corrente. Caso o token corrente esteja na lista de
+     * seguintes do não terminal então este esta correto. Caso ocorra algum erro sintatico em algum não terminal aninhado dentro de outro não
+     * terminal, o atributo error é sinalizado como verdadeiro. Caso um não terminal seja testado, mas este nao pertenca a cadeia requerida error continua como 
+     * falso. Isto é feito para garantir que o vazio será tratado corretamente.
+     * O metodo analiser chama o não terminal inicial, programa, para a verificacao da cadeia de entrada.
+    */
+    
+    /*
+    Este metodo accept verifica se o token atual eh o token esperado. Caso seja o token esperado ele avança para o proximo token.
+    Caso contrario ele reporta o erro sintatico.
+    */
+    private boolean  accept(String expected, String type, String nTerminal){
+        //System.out.println("Espera "+expected+" "+get_current_token().get_lexema());
+        if(get_current_token().get_lexema().equals(expected) || get_current_token().get_padrao().equals(type)){            
+            if(has_next_token()){
+                //System.out.println("Aceito "+get_current_token().get_lexema());
+                return true;
+            }else{
+                if(contains_primeiro(nTerminal,"vazio")){
+                    return true;
+                }else{
+                  System.out.println("Escopo incompleto 1");  
+                  return false;
+                }
+            }            
+        }else{
+            System.out.println("Linha " + get_current_token().get_linha() +": Falta "+expected);
+            panic(nTerminal);
+            return false;
+        }
+    }
+    /*
+        Este metodo accept verifica se o tipo de token atual eh o token esperado. Caso seja o token esperado ele avança para o proximo token.
+        Caso contrario ele reporta o erro sintatico.
+    */
+    private boolean  accept(String type, String nTerminal){
+        //System.out.println("Espera "+get_current_token().get_padrao()+ " "+type);
+        if(get_current_token().get_padrao().equals(type)){            
+            if(has_next_token()){
+                //System.out.println("Aceito "+get_current_token().get_lexema());
+                return true;
+            }else{
+                if(contains_primeiro(nTerminal,"vazio")){
+                    return true;
+                }else{
+                  System.out.println("Escopo incompleto");  
+                  return false;
+                }
+            }                        
+        }else{
+            System.out.println("Linha " + get_current_token().get_linha() +": Falta "+type);
+            panic(nTerminal);
+            return false;
+        }
     }
     
-    //Função para ser implementada no futuro e tratar vazios com o conjunto seguinte
-    private boolean contains_primeiro(String nTerminal,String terminal){
-        ArrayList arrayTemp=get_primeiro(nTerminal);
-        return arrayTemp.contains(terminal);
+    /*
+      Este metodo acceptVazio verifica se o nao terminal contem vazio. 
+    */
+    private boolean  acceptVazio(String nTerminal){
+        if(contains_primeiro(nTerminal,"vazio")){
+            return true;
+        }else{
+            panic(nTerminal);
+            return false;   
+        }
     }
+    /*
+    Executa o metodo do panico.Percorre uma lista de tokens até encontrar o token de sincronizacao. utiliza os seguintes do
+    nao terminal passado como parametro.
+    */
+    private void panic(String nTerminal){
+        while(!(contains_seguinte(nTerminal,get_current_token().get_lexema()) || 
+                    contains_seguinte(nTerminal,get_current_token().get_padrao()) ||
+                    get_current_token().equals(nTerminal)||
+                    get_current_token().equals(";") || get_current_token().equals("{")||
+                    get_current_token().equals("}")) && has_next_token()){
+                System.out.println(get_current_token().get_lexema());
+                ahead_token();
+        }
+        if(has_next_token()&& get_current_token().get_padrao().equals("DEL")){
+            ahead_token();
+        }        
+    }
+    
+    //<programa> ::= <constante> <programa> | <variavel> <programa> | <mainclass> <classe>
+    private void programa() throws IOException{
+        
+        //System.out.println("iniciando programa "+get_current_token().get_lexema());
+        //<constante> <programa> | <variavel> <programa>
+        if(contains_primeiro("<constante>",get_current_token().get_lexema())){// avalia constantes ou <variavel>
+            System.out.println("Passou constante "+get_current_token().get_lexema());
+            constantes();
+            //programa();
+            //System.out.println("Passou programa");
+            //Olhar tambem o proximo token
+        }else if(contains_primeiro("<variavel>", get_current_token().get_lexema())){
+            System.out.println("Passou variavel "+get_current_token().get_lexema());
+            //variavel();
+            //programa();
+        }else if(contains_primeiro("<mainclass>", get_current_token().get_lexema())){
+            System.out.println("Passou mainclass "+get_current_token().get_lexema());
+            //mainClass();
+            //classe();
+        }else{
+            System.out.println("Erro programa");
+        }
+    }    
     /**
      * Declaração de constantes
      * Este método testa um bloco de constantes
      * <constante> ::= const '{' <DC> '}'
-     */
-    private boolean constantes(){
-            if(get_token().get_lexema().equals("const")){//Testa se o token contem a palavra reservada const
-                if(next_token()){//avança um token
-                    if(get_token().get_lexema().equals("{")){//testa se { é o proximo caractere
-                        if(next_token()){
-                            if(declaracao_contante()){// vai para o não terminal <DC>. Caso aceite <DC> da match
-                                return true;
-                            }
+    */
+    private void constantes() throws IOException{
+            if(accept("const","","<constante>")){//Testa se o token contem a palavra reservada const
+                ahead_token();
+                if(accept("{","","<constante>")){//avança um token
+                    ahead_token();
+                    if(declaracao_contante()){//armazena as constantes
+                        if(accept("}","","<constante>")){
+                            System.out.println("Aceitou constante");
+                            ahead_token();    
                         }
                     }
                 }
-                return false;
-            }            
-        return false;
+            }
     }
-    
     /**
      * Declaração Constante
      * <DC> ::= <tipo> id '=' <valor> ';' <DC> | 
-     */
-    private boolean declaracao_contante(){
-            if(tipo()){//testa o não terminal <tipo>
-                if(next_token()){
-                    if(get_token().get_tipo().equals("ID")){// testa se há um identificador
-                        if(next_token()){
-                            if(get_token().get_lexema().equals("=")){//testa se tem um operador de atribuição
-                                if(next_token()){
-                                    if(valor()){//testa não terminal <valor>
-                                        if(next_token()){
-                                            if(get_token().get_lexema().equals(";")){//testa delimitador ;
-                                                if(next_token()){
-                                                    if(get_token().get_lexema().equals("}")){// testa delimitador de fim de bloco }
-                                                        return true;
-                                                    }else{// ou se há mais constantes a serem declaradas
-                                                        if(declaracao_contante()){
-                                                            return true;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
-        return false;
-    }
-    
-    
-    
-    
-    
-    /**
-     * <declara_vetor> ::= <tipo> id '[' <expN> ']' <col> '?'
-     * <col> ::= '[' <expN> ']' <col> |
-     * Declaração de vetor 
-     */
-    
-    private boolean declaracaoVetor(){
-        if(tipo()){
-            next_token();
-            //quando o id 
-            if(get_token().get_tipo().equals("ID")){
-                next_token();
-                    // verificação se tem [
-                    if(get_token().get_lexema().equals("[")){
-                    /////////////////////////
-                  //  falta terminar o declara vetor
-                    next_token();
-                    if(this.expN()){
-                       // verificar se precisa pular mesmo essa linha 
-                        next_token();
-                        // se deu tudo certo para a leitura do ] 
-                        if(get_token().get_lexema().equals("]")){
-                             next_token();
-                            // caso a declaração de vetor esteja correta
-                             if(this.col()){
-                                 return true;
-                             }
-                             // se a declaração de vetor não tá correta
-                             else{
-                                   System.out.printf(" A declaração de vetor tá errada -- em relaçã a coluna  ");
-                                    return false;
-                             }
-                             
-                         }
-                        // caso não tenha ]
-                        else{
-                        System.out.printf(" Não tem o ] ");
-                        return false;
-                        }
-                            
-                    }
-                    // quando a expressão for errada
-                    else{
-                        System.out.printf(" A expressão tá errada ");
-                        return false;
-                    }
-                    
-                    }
-                    // quando não tiver o [
-                    else{
-                        System.out.printf(" Não tem o [ ");
-                        return false;
-                        
-                    }
-            }
-            // caso não tenha ID
-            else{
-                System.out.printf("Não tem id");
-                return false;
-            }
-        }
-        return false;
-    } 
-    
-    
-        /**
-     * //terminar
-     * Declaração de variável
-     * // colocar o método de chamar declaração de vetor 
-     * <variavel> ::= <tipo> id <variavelinha> | <declara_vetor>
-     */
-        // voltar e ver essa lógica aqjui com essa classe token 
-    private boolean variavel( ){
-  
-        // verifica a condição de ter um não terminal <tipo>
-        if(tipo() ){
-            next_token(); 
-            // verificando se ter um id 
-            if(get_token().get_tipo().equals("ID")){
-                next_token();
-                // chamada de método para variavel linha
-                // resolver isso daqui 
-               
-                if(this.variavelLinha()== true){
-                 System.out.printf("passou por aqui ");
-                 return true;
-                }
-                else{
-                    return false;
-                }
-              
-            }
-            else{
-                System.out.printf("Não contém a estutura necessária , tá faltando o id" );
-                return false;
-            }
-        }
-        else{
-                System.out.printf("Não contém a estutura necessária , tá faltando o tipo" );
-                return false;
-        }
-      //  return true;
-    }
-    
-    
-    
-    /**
-      //duvidas token vai armazena só o tipo que ele tem ou o conteúdo?
-      Declaração do não terminal <váriavelinha>
-      * <variavelinha> ::= ',' id <variavelinha> | ';'
-      * */
-      private boolean variavelLinha(){
-            // quando a variável acabou 
-            if(get_token().get_lexema().equals(";")){
-                 //System.out.printf("passou pelo primeiro variavel linha ");
-                next_token();
-                return true;
-         }
-           
-            
-            else{
-                // passando na virgula 
-                    if(get_token().get_lexema().equals (",")){
-                        next_token();
-                        System.out.printf("passou pela ,\n");
-                                // passando no ID
-                            if(get_token().get_tipo().equals("ID")){
-                            next_token();
-                            System.out.printf("passou pelo ID \n");
-                                if(get_token().get_lexema().equals (";")){
-                                    next_token();
-                                    System.out.printf("passou pelo ;\n");
+    */
+    private boolean declaracao_contante() throws IOException{
+        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){//escolhe a primeira produção
+            if(tipo()){
+                String tipo=get_current_token().get_lexema();//guarda o tipo de declaracao da constante
+                String linha=get_current_token().get_linha();//guarda a linha
+                ahead_token();
+                if(accept("ID","<DC>")){
+                    String nome=get_current_token().get_lexema();//guarda o nome da constante
+                    ahead_token();
+                    if(accept("=","","<DC>")){
+                        ahead_token();
+                        if(valor()){
+                            String valor;
+                            if(tipo.equals("bool")){
+                                valor=get_current_token().get_lexema();//guarda o tipo de valor da constante
+                            }else{
+                                valor=get_current_token().get_padrao();//guarda o tipo de valor da constante
+                            }                            
+                            ahead_token();
+                            if(accept(";","","<DC>")){
+                                ahead_token();
+                                Item temp=new Item(nome,tipo,valor);
+                                sem.add_contantes_tab(temp,linha);
+                                if(declaracao_contante()){
                                     return true;
-                                    
-                                }
-                                // caso não acabe logo -- recursão
-                                else{
-                                        variavelLinha();
-                                        if(get_token().get_lexema().equals (";")){
-                                            next_token();
-                                            //return true;
-                                        }
-                                        else{
-                                            System.out.printf("deu merda na recursão");
-                                            //next_token();
-                                            return false;
-                                            
-                                        }
                                 }
                             }
-                            //caso não tenha um id
-                            else{
-                                System.out.printf("Tá sem o id ");
-                                next_token();
-                                return false;
-                                
-                            }
+                        }
                     }
-                    //acho desnecessário
-                    else{
-                        System.out.printf("Tá sem a ,  ");
-                       // next_token();
-                        return false;
-                        
-                    }
-                
-                
-                
-                return false;
-            }
-      }
-    
-    
-    
-    
-     /**
-     * Declaração de expressão natural
-     * <expN> ::= <termo><restoExp>
-     * @return 
-     */
-    private boolean expN(){
-     
-        if(this.termo()){
-            if(this.restoExp()){
-                return true;
-            }
-        }
-        
-        return false;
-        
-    }
-    
-    /**
-     * Produção de <termo>
-     * <termo> ::= <fator><restoTermo>
-     */
-    public boolean termo(){
-    return true;
-    }
-    /**
-     * Produção de <restoExp> referente ao resto da expressão
-     * <restoExp> ::= '+'<termo><restoExp> | ''<termo><restoExp> |
-     */
-    // tem que ver quando vai sair dessa exoressão
-    public boolean restoExp(){
-        // verificar primeiro se é tem o termo correto
-        if(get_token().get_lexema().equals("+") || get_token().get_lexema().equals("-")){
-            if(this.termo()){
-                this.restoExp();
-                
-            }
-        }
-    return false;
-    }
-    
-    /**
-     * Produção de <fator> 
-     * <fator> ::= <valorN> | id<D>| '%' | <vetor> | <chamarMetodo> | '('<expN>')'
-     */
-    
-    public boolean fator(){
-        return true;
-    }
-    
-     /**
-         * Método para averificar a coluna 
-         * <col> ::= '[' <expN> ']' <col> |
-         */
-    private boolean col (){
-        // caso acabe com a declaração de coluna
-       // como fazer para parar essa recursão ? 
-        
-    // caso tenha o  [
-        if(get_token().get_lexema().equals("[")){
-            next_token();
-            // caso o expx seja verdadeiro
-            if(this.expN()){
-                
-                //caso tenha o ]
-                if(get_token().get_lexema().equals("]")){
-                next_token();
-                return true;
-                    // caso tenha acabe a expressão de coluna
-                  // this.col();
-                    
-                    
-                }
-                // caso não tenha o ]
-                else{
-                    System.out.printf(" Não tem o ] ");
-                        return false;
                 }
             }
-            // caso a expressão expn esteja errada 
-            else {
-                System.out.printf(" Caso a expressão Expn esteja errada ");
-                        return false;
-            }
-            
-    } 
-        // não tem o [
-        else{
-         System.out.printf(" Não tem o [ ");
-                        return false;
+            return false;
+        }else if(acceptVazio("<DC>")){
+            System.out.println("DC vazio");
+            return true;
+        }else{
+            return false;
         }
-        
-    //lembrar que no final deve ter isso    
-    //next_token();    
-        //return true;
-        // return false;
     }
-    
-    
-    
-    
     /**
      * Testa se algum tipo é aceito
      * <tipo> ::= int | float | bool | char 
      */
     private boolean tipo(){
-        return ((get_token().get_lexema().equals("int")) || (get_token().get_lexema().equals("float")) ||
-                (get_token().get_lexema().equals("bool")) || (get_token().get_lexema().equals("char")));
+        return ((get_current_token().get_lexema().equals("int")) || (get_current_token().get_lexema().equals("float")) ||
+                (get_current_token().get_lexema().equals("bool")) || (get_current_token().get_lexema().equals("char")));
     }
     
     /**
      *<valorN> ::= numero | pontoflutuante
      */
     private boolean valor_numero(){
-        return ((get_token().get_tipo().equals("NUM_I")) || (get_token().get_tipo().equals("NUM_F")));
+        return ((get_current_token().get_padrao().equals("NUM_I")) || (get_current_token().get_padrao().equals("NUM_F")));
     }
     
     /**
      *<valorB> ::= true | false
      */
     private boolean valor_bool(){
-        return ((get_token().get_lexema().equals("true")) || (get_token().get_lexema().equals("false")));
+        return ((get_current_token().get_lexema().equals("true")) || (get_current_token().get_lexema().equals("false")));
     }
+    
     /**
-     *<valorB> ::= true | false
+     *<valorL> ::= cadeiaconstante | caractere
     */
     private boolean valor_literal(){
-        return ((get_token().get_tipo().equals("CAD")) || (get_token().get_tipo().equals("CAR")));
+        return ((get_current_token().get_padrao().equals("CAD")) || (get_current_token().get_padrao().equals("CAR")));
     }
         
     /**
@@ -531,289 +420,52 @@ public class Sintatico{
     private boolean valor(){
         return ((valor_numero())|| (valor_bool()) || (valor_literal()));
     }
-    /**
-     * Testa se há uma expressão válida
-     * <exp> ::= <exp_valor><F> | '!' <exp>
-     * @return 
-     */
-    private boolean expressao(){
-        //<exp_valor><F> 
-        System.out.println("Iniciando em expressao "+get_token().get_lexema());
-        if(expressao_valor()){
-            System.out.println("Passou expressao valor "+ get_token().get_lexema());
-            if(next_token()){
-                System.out.println("Indo para F"+get_token().get_lexema());
-                if(F()){
-                    System.out.println("Passou F"+ get_token().get_lexema());
-                    return true;
-                }
-            //Caso não tenha nenhum token verifica se o proximo pode ser vazio
-            }else if(contains_primeiro("<F>","vazio")){
-                System.out.println("Vazio F");
-                return true;
-            }
-            return false;
-        }else
-        // '!' <exp>
-        if(get_token().get_lexema().equals("!")){
-            System.out.println("Passou !"+ get_token().get_lexema());
-            if(next_token()){
-                if(expressao()){
-                    System.out.println("Passou expressao em expressao"+ get_token().get_lexema());
-                    return true;
+    /*
+    <mainclass> ::= class id <heranca> '{' <main> <cg1>'}'
+    */
+    private void mainclass(){
+        if(accept("class","","<mainclass>")){
+            ahead_token();
+            if(accept("ID","<mainclass>")){
+                ahead_token();
+                if(heranca()){
+                    if(accept("{","","<mainclass>")){
+                        
+                    }
                 }
             }
-            return false;
-        }else{        
-            return false;
         }
     }
     /**
-     * <F> ::= <exp_sufixo> |
+     * <heranca> ::= '(' id ')' |
+     * @return 
     */
-    private boolean F(){
-        System.out.println("Iniciando F: "+get_token().get_lexema());
-        if(expressao_sufixo()){
-            System.out.println("Passou Expressao Sufixo: "+get_token().get_lexema());
+    private boolean heranca(){
+        if(accept("(","","<heranca>")){
+            ahead_token();
+            if(accept("ID","<heranca>")){
+                ahead_token();
+                if(accept(")","","<heranca>")){
+                    ahead_token();
+                    //uma heranca deve ser aceita se uma classe ja existir
+                    return true;
+                }
+            }
+            return false;
+        }else if(acceptVazio("<heranca>")){
             return true;
-        }else 
-        //Verificar conjunto seguinte(F)
-        if(contains_seguinte("<F>",get_token().get_lexema())){
-            System.out.println("Passou Conjunto Seguinte de F: "+get_token().get_lexema());
-            return true;    
         }else{
             return false;
         }        
-    }
-    /**
-     * <exp_sufixo> ::= '<' <T> <exp> | '>' <T> <exp> | '==' <exp> | '!=' <exp> |  '&&' | <exp> | '||'
-     * | '+' <exp> | '­' <exp> | '*' <exp> | '/' <exp> | '%' <exp>
-     */
-    private boolean expressao_sufixo(){
-        //'<' <T> <exp> | '>' <T> <exp>
-        System.out.println("Iniciando expressao sufixo: "+get_token().get_lexema());
-        if((get_token().get_lexema().equals("<")) || (get_token().get_lexema().equals(">"))){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            if(next_token()){
-                //<T> pode ser '=' ou vazio. se for vazio o proximo de <T> é expressao.
-                if(T()){//Expressao é o seguinte caso ocorra um vazio
-                    System.out.println("Passou T "+ get_token().get_lexema());
-                    return true;
-                }else if(expressao()){
-                    System.out.println("Passou expressao em expressao sufixo"+ get_token().get_lexema());
-                    return true;
-                }
-            }
-            return false;
-        }else
-        //'==' <exp> | '!=' <exp>
-        if((get_token().get_lexema().equals("==")) || (get_token().get_lexema().equals("!="))){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            if(next_token()){
-                if(expressao()){
-                    System.out.println("Passou Expressao em sufixo"+ get_token().get_lexema());
-                    return true;
-                }
-            }
-            return false;
-        }else
-        //'&&'| '||'
-        if((get_token().get_lexema().equals("&&")) || (get_token().get_lexema().equals("||"))){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            return true;
-        }else
-        //<exp>
-        if(expressao()){
-            System.out.println("Passou expressao sufixo2 "+ get_token().get_lexema());
-            return true;
-        }else
-        //| '+' <exp> | '­' <exp> | '*' <exp> | '/' <exp> | '%' <exp>    
-        if((get_token().get_lexema().equals("+")) || (get_token().get_lexema().equals("-")) ||
-                (get_token().get_lexema().equals("*")) || (get_token().get_lexema().equals("/")) ||
-                (get_token().get_lexema().equals("%"))){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            if(next_token()){
-                System.out.println("Indo para expressao ");
-                if (expressao()) {
-                    System.out.println("Passou Expressao em sufix3");
-                    return true;
-                }
-            }
-            return false;
-        }else{
-            return false;
-        }
-    }
-    /**
-     *<T> ::= '=' | 
-    */
-    private boolean T(){
-        System.out.println("Iniciando T "+ get_token().get_lexema());
-        if(get_token().get_lexema().equals("=")){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            return true;
-        }else 
-        //Verificar conjunto seguinte(T)
-        if(contains_seguinte("<T>",get_token().get_lexema())){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            return true;
-        }else{
-            System.out.println("Não passou <T>");
-            return false;
-        }
         
     }
     /**
-     * Testa se há uma expressão válida
-     * <exp_valor> ::= <valorB> | <valorN> | id <G> | ( <exp> ) | <chamarMetodo> | <vetor>
-     * @return 
-    */
-    private boolean expressao_valor(){
-        System.out.println("Iniciando expressao valor: "+get_token().get_tipo());
-        //<valorB> | <valorN>
-        if(valor_bool() || valor_numero()){
-            System.out.println("<valorB> | <valorN> Passou para "+get_token().get_lexema());
-            return true;
-        }else
-        //id <G>
-        if(get_token().get_tipo().equals("ID")){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            if(next_token()){
-                System.out.println("Indo para G"+ get_token().get_lexema());
-                if(G()){
-                    System.out.println("Passou de G ");
-                    return true;
-                }
-            }
-            return false;
-        }else
-        //( <exp> )
-        if(get_token().get_lexema().equals("(")){
-            System.out.println("Passou para "+ get_token().get_lexema());
-            if(next_token()){
-                System.out.println("Indo para "+ get_token().get_lexema());
-                if(expressao()){
-                    System.out.println("Passou Expressao em expressao valor "+ get_token().get_lexema());
-                    if(next_token()){
-                        if(get_token().get_lexema().equals(")")){
-                            System.out.println("Passou para "+ get_token().get_lexema());
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }else 
-        //<chamarMetodo>
-        if(chamar_metodo()){
-            System.out.println("Passou chamar metodo ");
-            return true;
-        }else 
-        //<vetor>
-        if(vetor()){
-            System.out.println("Passou vetor");
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
-    /**
-     * <G>::= '.' id |
+     * Este metodo chama o não terminal inicial <programa> da gramatica para a analise sintatica.
+     * @throws IOException 
      */
-    private boolean G(){ 
-        System.out.println("Iniciando <G>");
-        if(get_token().get_lexema().equals(".")){
-            System.out.println("Passou para "+get_token().get_lexema());
-            if(next_token()){
-                if(get_token().get_tipo().equals("ID")){
-                    System.out.println("Passou para "+get_token().get_lexema());
-                    return true;
-                }
-            }
-            return false;
-        }else 
-        //Fazer um else if para a Função seguinte(G) para o vazio
-        if(contains_seguinte("<G>",get_token().get_lexema())){
-            System.out.println("Passou seguinte(G) ");
-            return true;
-        }else{
-            return false;
-        }
-    }
-    /**
-     * 
-     * @return 
-     */
-    private boolean vetor(){    
-        return false;
-    }
-    /**
-     * 
-     * @return 
-     */
-    private boolean chamar_metodo(){
-        
-        return false;
-    }
-    /**
-     * <heranca> ::= (id) |
-     * @return 
-     */
-    private boolean heranca(){
-            if(get_token().get_lexema().equals("(")){
-                if(next_token())
-                    if(get_token().get_tipo().equals("ID")){
-                        if(get_token().get_lexema().equals(")")){
-                            return true;
-                        }
-                    }
-                return false;
-            }else
-            //Senão vazio
-            if(contains_seguinte("<heranca>",get_token().get_lexema())){
-                return true;
-            }
-            else{
-                return false;
-            }
-    }
-    
     public void analiser() throws IOException{     
         //abre arquivo para escrita
         openFiletoWrite();
-        if(next_token()){
-          if(constantes()){
-              if(next_token()){
-                System.out.println("Passou Constantes");
-                if(expressao()){
-                  System.out.println("Passou Expressao");
-                }else{
-                    System.out.println("Não Passou Expressao");
-                }
-              }
-          }else{
-              System.out.println("Não Passou Constantes");
-          }
-        }
+        programa();
     }
-        /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args){             
-        try {
-            Analex analex;
-            analex= new Analex();
-            analex.analiser();
-            Sintatico sint;
-            sint = new Sintatico();
-            sint.analiser();
-
-        } catch (FileNotFoundException e) {
-            System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-        } catch (IOException e) {
-            System.err.printf("Erro na leitura do arquivo: %s.\n", e.getMessage());
-        }
-        
-    }    
 }
