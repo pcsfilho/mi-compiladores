@@ -7,9 +7,15 @@ import java.util.ArrayList;
 public class Semantico {
     private ArrayList<Item> constantes_tab;//armazena o conjunto primeiro de cada não terminal
     private ArrayList<Item> var_globais_tab;//armazena o conjunto primeiro de cada não terminal
+    private ArrayList<Item> classe_tab;//armazena o conjunto primeiro de cada não terminal
+    private ArrayList<Item> heranca_tab;//armazena o conjunto primeiro de cada não terminal
+    private ArrayList<Item> variavel_tab;//armazena o conjunto primeiro de cada não terminal
     public Semantico(){
         constantes_tab=new ArrayList<Item>();
         var_globais_tab=new ArrayList<Item>();
+        classe_tab= new ArrayList<Item>();
+        heranca_tab= new ArrayList<Item>();
+        variavel_tab= new ArrayList<Item>();
     }
     
     /*
@@ -39,6 +45,32 @@ public class Semantico {
             System.out.println("Erro semantico, linha "+ linha +",ja existe constante com este nome");
         }
     }
+    /**
+     * Adicionando classe 
+     */
+   public void add_classe_tab(Item item , String linha){
+    if(!(classe_tab.contains(item))){
+                classe_tab.add(item);
+        }else{
+            System.out.println("Erro semantico, linha "+ linha +",ja existe uma classe com este nome");
+        }
+   }
+   
+   public void add_heranca_tab(Item item , String linha){
+    if(!(heranca_tab.contains(item))){
+                heranca_tab.add(item);
+        }else{
+            System.out.println("Erro semantico, linha "+ linha +",ja existe uma heranca com este nome");
+        }
+   }
+   // rever essa adição para ser consciente com o valor padrão
+   public void add_variavel_tab(Item item , String linha){
+    if(!(variavel_tab.contains(item))){
+                variavel_tab.add(item);
+        }else{
+            System.out.println("Erro semantico, linha "+ linha +",ja existe uma variavel com este nome");
+        }
+   }
     
     
 }

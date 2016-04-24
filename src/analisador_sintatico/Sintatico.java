@@ -422,6 +422,12 @@ public class Sintatico{
         if(contains_primeiro("<classe>",get_current_token().get_lexema())){
             ahead_token();
             if(accept("ID","<classe>")){
+                String nome = get_current_token().get_lexema();
+                String tipo = get_current_token().get_padrao();
+                String valor = get_current_token().get_lexema();
+                String linha = get_current_token().get_linha();
+                
+                
                 ahead_token();
                 heranca();
                 if(accept("{","","<classe>")){
@@ -429,6 +435,9 @@ public class Sintatico{
                     cg1();
                     if(accept("}","","<classe>")){
                         ahead_token();
+                        // adicionando uma classe que está de forma correta na lista de classe
+                         Item temp=new Item(nome,tipo,valor);
+                         sem.add_classe_tab(temp,linha);
                         classe();
                         return true;
                     
@@ -459,8 +468,19 @@ public class Sintatico{
             if(accept("(","","<heranca>")){
                 ahead_token();
                 if(accept("ID","<heranca>")){
+                    // pegando dados importantes para verificação da herança
+                String nome = get_current_token().get_lexema();
+                String tipo = get_current_token().get_padrao();
+                String valor = get_current_token().get_lexema();
+                String linha = get_current_token().get_linha();
+                    
+                    
                     ahead_token();
                     if(accept(")","","<heranca>")){
+                        
+                        // adicionando uma classe que está de forma correta na lista de classe
+                         Item temp=new Item(nome,tipo,valor);
+                         sem.add_heranca_tab(temp,linha);
                         ahead_token();
                         return true;
                     }
@@ -539,7 +559,7 @@ public class Sintatico{
     }
     /**
      * ProduÃ§Ã£o de cg2 
-     * <cg2> ::= <atribuicao><cg2> | <variavel><cg2> | <comando><cg2> | <exp> '?' <cg2> |
+     * <cg2> ::= <atribuicao><cg2> | <variavel><cg2> | <comando><cg2> | <exp> ';' <cg2> |
      * verificar se esse true depois de cada chamada reduntate tÃ¡ certo realmente
      */
     
@@ -590,8 +610,12 @@ public class Sintatico{
                 String tipo=get_current_token().get_lexema();//guarda o nome da constante
                 ahead_token();
                 if(accept("ID","<variavel>")){
+                    String nome = get_current_token().get_lexema();
+                    String linha = get_current_token().get_linha();
                     ahead_token();
-                    variavelLinha();
+                    if(variavelLinha(tipo,nome,linha)){
+                        
+                    }
                     
                     
                 }
@@ -604,22 +628,29 @@ public class Sintatico{
         return false;
     }
     /**
-     * ProduÃ§Ã£o de Variavel Linha 
+     * Producao de Variavel Linha 
      * <variavelinha> ::= ',' id <variavelinha> | ';'
      * @return 
      */
-    private boolean variavelLinha(){
+    private boolean variavelLinha( String nome,String tipo,String linha){
         if(accept(",","","<cg2>")){
             ahead_token();
             if(accept("ID","<cg2>")){
+                String nome2 = get_current_token().get_lexema();
+                String linha2 = get_current_token().get_linha();
                 ahead_token();
-                if(variavelLinha()){
+                // verificar isso daqui adicionando outro método
+                if(variavelLinha(nome2,tipo,linha2)){
+                       Item temp=new Item(nome2,tipo,linha2);
+                        sem.add_variavel_tab(temp,linha2);
                        //ahead_token();
                        return true;
                 }
             }
         }
         else if(accept(";","","cg2")){
+            Item temp=new Item(nome,tipo,nome);
+            sem.add_variavel_tab(temp,linha);
             ahead_token();
             return true;
         }
@@ -632,6 +663,7 @@ public class Sintatico{
      * @return 
      */
     private boolean metodo(){
+        
         if(contains_primeiro("<tipo>",get_current_token().get_lexema())){
             ahead_token();
             if(accept("ID","<metodo>")){
@@ -788,7 +820,7 @@ public class Sintatico{
     
     /**
      * ProduÃ§Ã£o de atribuiÃ§Ã£o 
-     * <atribuicao> ::= id '=' <atribuicao2> '?' | <vetor> '=' <atribuicao2> '?'
+     * <atribuicao> ::= id '=' <atribuicao2> ';' | <vetor> '=' <atribuicao2> ';'
      * @return 
      */
     private boolean atribuicao(){
@@ -819,17 +851,170 @@ public class Sintatico{
         }
         return false;
     }
-    
+    /**
+     * Produção de atribuição 2 
+     * <atribuicao2> ::= <valorL> | <exp> | <instanciar>
+     * @return 
+     */
      private boolean atribuicao2(){
-        return true;
+         if(valor_literal()){
+             ahead_token();
+             return true;
+             
+         }
+         else if(expressao()){
+             return true;
+         }
+         else if(instanciar()){
+             return true;
+         }
+        return false;
     }
+     /**
+      * Produção de vetor 
+      * <vetor> ::= id '[' <expN> ']' <col>
+      * @return 
+      */
     private boolean vetor(){
-        return true;
+        if(accept("ID","<vetor>")){
+            ahead_token();
+            if(accept("[","","<vetor>")){
+                ahead_token();
+                if(expressao_numerica()){
+                    ahead_token();
+                    if(accept("]","","<vetor>")){
+                        ahead_token();
+                        if(coluna()){
+                            return true;
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }
+        return false;
     }
+    /**
+     * Produção de comando 
+     * <comando> ::= <if> | <while> | <write> | <read>
+     * @return 
+     */
     private boolean comando(){
+        if(comandoIf()){
+            return true;
+        
+        }
+        else if(comandoWhile()){
+            return true;
+        }
+        else if(comandoWrite()){
+            return true;
+        }
+        else if(comandoRead()){
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Produção de expressão 
+     * @return 
+     * <exp> ::= <exp_valor><F> | '!' <exp>
+     */
+    private boolean expressao(){
+        if(expressao_valor()){
+            if(F()){
+                return true;
+            }
+        }
+        else if(accept("!","","<expressao>")){
+            ahead_token();
+            expressao();
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Produção do instanciar
+     * <instanciar> ::= new id '(' <argumentos> ')'
+     * Já com o has_next_token() incluido
+     * @return 
+     */
+    private boolean instanciar(){
+        if(accept("new","","<instanciar>")){
+            if(has_next_token()){
+                ahead_token();
+                if(accept("ID","<instanciar>")){
+                    if(has_next_token()){
+                        ahead_token();
+                        if(accept("(","","<instanciar>")){
+                            if(has_next_token()){
+                                ahead_token();
+                                if(argumentos()){
+                                    if(has_next_token()){
+                                        if(accept(")","","<instanciar>")){
+                                            if(has_next_token()){
+                                                ahead_token();
+                                                return true;
+                                            }
+                                            //quando não tiver o próximo
+                                            else{
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
+                            }
+                            //quando não tiver o próximo 
+                            else{
+                            }
+                            
+                        }
+                    }
+                    //quando não tiver o próximo
+                    else{
+                        return false;
+                    }
+                    
+                }
+            
+            }
+            // o que fazer quando não tiver o próximo?
+            // quando não tiver o próximo
+            else{
+                return false;
+            }
+        }
+        return false;
+    }
+    private boolean expressao_numerica(){
         return true;
     }
-    private boolean expressao(){
+    private boolean coluna (){
+        return true;
+    }
+    private boolean comandoIf(){
+        return true;
+    }
+    private boolean comandoWhile(){
+        return true;
+    }
+    private boolean comandoWrite(){
+        return true;
+    }
+    private boolean comandoRead(){
+        return true;
+    }
+    private boolean expressao_valor(){
+        return true;
+    }
+    private boolean F(){
+        return true;
+    }
+    private boolean argumentos(){
         return true;
     }
     //final do bloco que jÃ¡ adicionei
@@ -878,6 +1063,7 @@ public class Sintatico{
     /*
     <mainclass> ::= class id <heranca> '{' <main> <cg1>'}'
     */
+    /**
     private void mainclass(){
         if(accept("class","","<mainclass>")){
             ahead_token();
@@ -895,6 +1081,8 @@ public class Sintatico{
      * <heranca> ::= '(' id ')' |
      * @return 
     */
+    /**
+     * 
     private boolean heranca(){
         if(accept("(","","<heranca>")){
             ahead_token();
@@ -913,7 +1101,8 @@ public class Sintatico{
             return false;
         }        
         
-    }
+    
+    */
     /**
      * Este metodo chama o nÃ£o terminal inicial <programa> da gramatica para a analise sintatica.
      * @throws IOException 
