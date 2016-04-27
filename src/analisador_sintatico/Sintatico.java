@@ -19,15 +19,15 @@ public class Sintatico{
     private FileWriter fileW;//atributo de escrita de arquivo
     private BufferedWriter writeFile;//atributo de buffer de escrita de arquivo
     private Token currentToken;//armazena o token atual a ser analisado
-    private int position;//armazena a posi√ß√£o atual do token
+    private int position;//armazena a posiÁ„o atual do token
     private ArrayList<Token> listaTokens;//lista de tokens do analisador lexico;
-    private Hashtable<String,ArrayList> conjuntoSeguinte;//armazena o conjunto seguinte de cada n√£o terminal
-    private Hashtable<String,ArrayList> conjuntoPrimeiro;//armazena o conjunto primeiro de cada n√£o terminal
+    private Hashtable<String,ArrayList> conjuntoSeguinte;//armazena o conjunto seguinte de cada n„o terminal
+    private Hashtable<String,ArrayList> conjuntoPrimeiro;//armazena o conjunto primeiro de cada n„o terminal
     private Semantico sem;
     private boolean error;//armazena um erro sintatico caso ocorra. 
     private String[] reservedsWords;
     /**
-     * Este m√©todo inicializa os atributos da classe Sintatico. Abre o arquivo de leitura e inicializa
+     * Este mÈtodo inicializa os atributos da classe Sintatico. Abre o arquivo de leitura e inicializa
      * o array de tokens para a analise sintatica. Tambem inicialisa o conjunto seguinte e primeiro.
      * @throws java.io.FileNotFoundException
     */
@@ -52,7 +52,7 @@ public class Sintatico{
         String temp;
         while(scanner.hasNext()){
             String token = scanner.nextLine(); 
-            listaTokens.add(new Token(token));//cria um objeto Token para armazenar as informa√ß√µes(tipo, lexema, linha)
+            listaTokens.add(new Token(token));//cria um objeto Token para armazenar as informaÁıes(tipo, lexema, linha)
         }
         if(listaTokens.size()>0){
             currentToken=listaTokens.get(0);
@@ -87,11 +87,11 @@ public class Sintatico{
             //construtor recebe como argumento o objeto do tipo FileWriter
             writeFile = new BufferedWriter(fileW);
         }else{
-            System.out.print("O arquivo de Escrita n√É¬£o pode ser aberto\n");
+            System.out.print("O arquivo de Escrita n√£o pode ser aberto\n");
         }
     }
     /**
-     * Iniciacila uma tabela HASH para os seguintes e uma para os primeiros de cada n√£o terminal a partir da leitura de um arquivo, para
+     * Iniciacila uma tabela HASH para os seguintes e uma para os primeiros de cada n„o terminal a partir da leitura de um arquivo, para
      * seguintes e primeiros.
      */
     private void init_seguinte_primeiro() throws FileNotFoundException{
@@ -133,13 +133,13 @@ public class Sintatico{
         return conjuntoPrimeiro.get(nTerminal);
     }
     /**
-    *Verifica se √© uma palavra reservada 
+    *Verifica se È uma palavra reservada 
     */
     /**
-     Este metodo recebe uma String como parametro e verifica se esta √É¬© uma palavra reservada. 
+     Este metodo recebe uma String como parametro e verifica se esta √© uma palavra reservada. 
      * Se sim retorna true
      * @param word
-     * @return true se √É¬© uma palavra reservada
+     * @return true se √© uma palavra reservada
      */
     private boolean isReservedWord(String word){           
         for (int i = 0; i <reservedsWords.length; i++) {
@@ -149,7 +149,7 @@ public class Sintatico{
         return false;
     }
     /**
-    * Este m√©todo retorna se h√° um proximo token(true ou false) na lista de tokens
+    * Este mÈtodo retorna se h· um proximo token(true ou false) na lista de tokens
     * para este novo token(Token)
     */
     private boolean has_next_token(){
@@ -159,14 +159,14 @@ public class Sintatico{
         return false;
     }    
     /**
-     * Este m√©todo retorna o token atual
+     * Este mÈtodo retorna o token atual
      * @return Token
     */
     private Token get_current_token(){
         return currentToken;
     }
     /**
-     * Este metodo retorna uma posi√ßao no array de tokens
+     * Este metodo retorna uma posiÁao no array de tokens
      */
     private void back_token(){
         position--;
@@ -174,7 +174,7 @@ public class Sintatico{
             currentToken=listaTokens.get(position);
     } 
     /**
-    * Este metodo avanca uma posi√ßao no array de tokens
+    * Este metodo avanca uma posiÁao no array de tokens
     */
     private void ahead_token(){
         position++;
@@ -190,7 +190,7 @@ public class Sintatico{
             return currentToken;
         }
     } 
-    /**Este m√©todo verifica se um terminal passado como parametro pertence ao conjunto seguinte de um n√£o terminal
+    /**Este mÈtodo verifica se um terminal passado como parametro pertence ao conjunto seguinte de um n„o terminal
     */ 
     private boolean contains_seguinte(String nTerminal,String terminal){
         ArrayList arrayTemp=conjuntoSeguinte.get(nTerminal);
@@ -199,7 +199,7 @@ public class Sintatico{
         }
         return false;
     }  
-    /**Este m√©todo verifica se um terminal passado como parametro pertence ao conjunto primeiro de um n√£o terminal
+    /**Este mÈtodo verifica se um terminal passado como parametro pertence ao conjunto primeiro de um n„o terminal
     */
     private boolean contains_primeiro(String nTerminal,String terminal){
         ArrayList arrayTemp = get_primeiro(nTerminal);
@@ -207,19 +207,19 @@ public class Sintatico{
     }
 
     /******************************************Nao Terminais************************************************************
-     * Cada nao terminal da gramatica possui um metodo para a analise sintatica. Sendo que a verifica√ß√£o dos terminais √© 
-     * feita a partir de testes de verdadeiro ou falso para um token atual. A cada verificacao verdadeira o token √© atualizado 
+     * Cada nao terminal da gramatica possui um metodo para a analise sintatica. Sendo que a verificaÁ„o dos terminais È 
+     * feita a partir de testes de verdadeiro ou falso para um token atual. A cada verificacao verdadeira o token È atualizado 
      * de acordo com a lista de tokens armazenado em list_tokens. Usa-se o metodo has_next_token para verificar se existe um proximo token 
      * a ser verificado. Usa-se o metodo para ahead_token para avancar para o proximo token. 
-     * Caso exista um vazio na gramatica este √© testado verificando o seguinte do n√£o terminal corrente. Caso o token corrente esteja na lista de
-     * seguintes do n√£o terminal ent√£o este esta correto. Caso ocorra algum erro sintatico em algum n√£o terminal aninhado dentro de outro n√£o
-     * terminal, o atributo error √© sinalizado como verdadeiro. Caso um n√£o terminal seja testado, mas este nao pertenca a cadeia requerida error continua como 
-     * falso. Isto √© feito para garantir que o vazio ser√° tratado corretamente.
-     * O metodo analiser chama o n√£o terminal inicial, programa, para a verificacao da cadeia de entrada.
+     * Caso exista um vazio na gramatica este È testado verificando o seguinte do n„o terminal corrente. Caso o token corrente esteja na lista de
+     * seguintes do n„o terminal ent„o este esta correto. Caso ocorra algum erro sintatico em algum n„o terminal aninhado dentro de outro n„o
+     * terminal, o atributo error È sinalizado como verdadeiro. Caso um n„o terminal seja testado, mas este nao pertenca a cadeia requerida error continua como 
+     * falso. Isto È feito para garantir que o vazio ser· tratado corretamente.
+     * O metodo analiser chama o n„o terminal inicial, programa, para a verificacao da cadeia de entrada.
     */
     
     /*
-    Este metodo accept verifica se o token atual eh o token esperado. Caso seja o token esperado ele avan√ßa para o proximo token.
+    Este metodo accept verifica se o token atual eh o token esperado. Caso seja o token esperado ele avanÁa para o proximo token.
     Caso contrario ele reporta o erro sintatico.
     */
     private boolean  accept(String expected, String type, String nTerminal){
@@ -243,7 +243,7 @@ public class Sintatico{
         }
     }
     /*
-        Este metodo accept verifica se o tipo de token atual eh o token esperado. Caso seja o token esperado ele avan√ßa para o proximo token.
+        Este metodo accept verifica se o tipo de token atual eh o token esperado. Caso seja o token esperado ele avanÁa para o proximo token.
         Caso contrario ele reporta o erro sintatico.
     */
     private boolean  accept(String type, String nTerminal){
@@ -272,6 +272,8 @@ public class Sintatico{
     */
     private boolean  acceptVazio(String nTerminal){
         if(contains_primeiro(nTerminal,"vazio")){
+            back_token();
+            System.out.println("Dentro do Vazio "+get_current_token().get_lexema());
             return true;
         }else{
             panic(nTerminal);
@@ -279,7 +281,7 @@ public class Sintatico{
         }
     }
     /*
-    Executa o metodo do panico.Percorre uma lista de tokens at√© encontrar o token de sincronizacao. utiliza os seguintes do
+    Executa o metodo do panico.Percorre uma lista de tokens atÈ encontrar o token de sincronizacao. utiliza os seguintes do
     nao terminal passado como parametro.
     */
     private void panic(String nTerminal){
@@ -313,21 +315,21 @@ public class Sintatico{
             //programa();
         }else if(contains_primeiro("<mainclass>", get_current_token().get_lexema())){
             System.out.println("Passou mainclass "+get_current_token().get_lexema());
-            //mainClass();
-            //classe();
+            mainClass();
+            classe();
         }else{
             System.out.println("Erro programa");
         }
     }    
     /**
-     * Declara√ß√£o de constantes
-     * Este m√©todo testa um bloco de constantes
+     * DeclaraÁ„o de constantes
+     * Este mÈtodo testa um bloco de constantes
      * <constante> ::= const '{' <DC> '}'
     */
     private void constantes() throws IOException{
             if(accept("const","","<constante>")){//Testa se o token contem a palavra reservada const
                 ahead_token();
-                if(accept("{","","<constante>")){//avan√ßa um token
+                if(accept("{","","<constante>")){//avanÁa um token
                     ahead_token();
                     if(declaracao_contante()){//armazena as constantes
                         if(accept("}","","<constante>")){
@@ -339,11 +341,11 @@ public class Sintatico{
             }
     }
     /**
-     * Declara√ß√£o Constante
+     * DeclaraÁ„o Constante
      * <DC> ::= <tipo> id '=' <valor> ';' <DC> | 
     */
     private boolean declaracao_contante() throws IOException{
-        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){//escolhe a primeira produ√ß√£o
+        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){//escolhe a primeira produÁ„o
             if(tipo()){
                 String tipo=get_current_token().get_lexema();//guarda o tipo de declaracao da constante
                 String linha=get_current_token().get_linha();//guarda a linha
@@ -381,648 +383,8 @@ public class Sintatico{
             return false;
         }
     }
-
-
-
-    // adicionando o c√≥digo que j√° fiz 
-     /**
-     * produ√ß√£o de mainclasse
-     * <mainclass> ::= class id <heranca> '{' <main> <cg1>'}'
-     */
-    private void mainclass(){
-    
-    if(accept("class","","<mainclass>")){
-        ahead_token();
-        if(accept("ID","<DC>")){
-            ahead_token();
-            // heran√ßa deve retornar true ou false
-            heranca();
-            if(accept("{","","<mainclass>")){
-                ahead_token();
-                comandoMain();
-                cg1();
-                if(accept("}","","<mainclass>")){
-                    ahead_token();
-                
-                }
-           
-            }
-            
-        }
-    }
-    
-    
-    
-    }
     /**
-     * Produ√ß√£o de classe 
-     * <classe> ::= class id <heranca> '{' <cg1> '}' <classe> |
-     */
-    private boolean classe(){
-        if(contains_primeiro("<classe>",get_current_token().get_lexema())){
-            ahead_token();
-            if(accept("ID","<classe>")){
-                String nome = get_current_token().get_lexema();
-                String tipo = get_current_token().get_padrao();
-                String valor = get_current_token().get_lexema();
-                String linha = get_current_token().get_linha();
-                
-                
-                ahead_token();
-                heranca();
-                if(accept("{","","<classe>")){
-                    ahead_token();
-                    cg1();
-                    if(accept("}","","<classe>")){
-                        ahead_token();
-                        // adicionando uma classe que est· de forma correta na lista de classe
-                         Item temp=new Item(nome,tipo,valor);
-                         sem.add_classe_tab(temp,linha);
-                        classe();
-                        return true;
-                    
-                    }
-                
-                }
-                
-            }
-        
-        }
-        else if(acceptVazio("<classe>")){
-            System.out.println("classe vazio");
-            return true;
-        }
-        else{
-            return false;
-        }
-        return false;
-    }
-    
-    /**
-     * Produ√ß√£o da heran√ßa
-     * <heranca> ::= '(' id ')' |
-     */
-    private boolean heranca(){
-        if(contains_primeiro("<heranca>",get_current_token().get_lexema())){
-            ahead_token();
-            if(accept("(","","<heranca>")){
-                ahead_token();
-                if(accept("ID","<heranca>")){
-                    // pegando dados importantes para verificaÁ„o da heranÁa
-                String nome = get_current_token().get_lexema();
-                String tipo = get_current_token().get_padrao();
-                String valor = get_current_token().get_lexema();
-                String linha = get_current_token().get_linha();
-                    
-                    
-                    ahead_token();
-                    if(accept(")","","<heranca>")){
-                        
-                        // adicionando uma classe que est· de forma correta na lista de classe
-                         Item temp=new Item(nome,tipo,valor);
-                         sem.add_heranca_tab(temp,linha);
-                        ahead_token();
-                        return true;
-                    }
-                
-                }
-                
-            }
-        }
-        else if(acceptVazio("<heranca>")){
-            System.out.println("Heran√ßa vazio");
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Produ√ß√£o do main 
-     * <main> ::= void main '(' ')' '{' <cg2> '}'
-     */
-    private void comandoMain(){
-        if(accept("void","","<main>")){
-            ahead_token();
-            if(accept("main","","<main>")){
-                ahead_token();
-                if(accept("(","","<main>")){
-                    ahead_token();
-                    if(accept(")","","<main>")){
-                        ahead_token();
-                        if(accept("{","","<main>")){
-                            ahead_token();
-                            cg2();
-                            if(accept("}","","<main>")){
-                                ahead_token();
-                            }
-                            
-                        }
-                    
-                    }
-                    
-                }
-            
-            }
-        
-        }
-    }
-    /**
-     * Produ√ß√£o de cg1 
-     * <cg1> ::= <variavel><cg1> | <metodo><cg1> | !<atribuicao><cg1> |
-     */
-    private boolean  cg1(){
-        if(contains_primeiro("<cg1>",get_current_token().get_lexema())){
-            if(variavel()){
-                cg1();
-                ahead_token();
-                return true;
-            }
-            else if(metodo()){
-                cg1();
-                ahead_token();
-                return true;
-            }
-            else if(accept("!","","<cg1>")){
-                ahead_token();
-                if(atribuicao()){
-                    cg1();
-                ahead_token();
-                return true;
-                }
-            }
-        }
-        else if(acceptVazio("<cg1>")){
-         System.out.println("cg1 vazio");
-            return true;   
-        }
-        return false;
-    }
-    /**
-     * Produ√ß√£o de cg2 
-     * <cg2> ::= <atribuicao><cg2> | <variavel><cg2> | <comando><cg2> | <exp> ';' <cg2> |
-     * verificar se esse true depois de cada chamada reduntate t√° certo realmente
-     */
-    
-    private boolean cg2(){
-        if(contains_primeiro("<cg1>",get_current_token().get_lexema())){
-            if(atribuicao()){
-                cg2();
-                ahead_token();
-                return true;
-            }
-            else if (variavel()){
-                cg2();
-                ahead_token();
-                return true;
-            }
-            else if (comando()){
-                cg2();
-                ahead_token();
-                return true;
-                
-            }
-            else if(expressao()){
-                if(accept(";","","cg2")){
-                    ahead_token();
-                    cg2();
-                    ahead_token();
-                    return true;
-                
-                }
-            
-            }
-        }
-        else if(acceptVazio("<cg2>")){
-            System.out.println("cg2 vazio");
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Produ√ß√£o de variavel 
-     * <variavel> ::= <tipo> id <variavelinha> | <declara_vetor>
-     * @return 
-     */
-    
-    private boolean variavel(){
-        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){
-            if(tipo()){
-                String tipo=get_current_token().get_lexema();//guarda o nome da constante
-                ahead_token();
-                if(accept("ID","<variavel>")){
-                    String nome = get_current_token().get_lexema();
-                    String linha = get_current_token().get_linha();
-                    ahead_token();
-                    if(variavelLinha(tipo,nome,linha)){
-                        
-                    }
-                    
-                    
-                }
-            }
-        
-        }
-        else if(contains_primeiro("<declara_vetor>",get_current_token().get_lexema())){
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Producao de Variavel Linha 
-     * <variavelinha> ::= ',' id <variavelinha> | ';'
-     * @return 
-     */
-    private boolean variavelLinha( String nome,String tipo,String linha){
-        if(accept(",","","<cg2>")){
-            ahead_token();
-            if(accept("ID","<cg2>")){
-                String nome2 = get_current_token().get_lexema();
-                String linha2 = get_current_token().get_linha();
-                ahead_token();
-                // verificar isso daqui adicionando outro mÈtodo
-                if(variavelLinha(nome2,tipo,linha2)){
-                       Item temp=new Item(nome2,tipo,linha2);
-                        sem.add_variavel_tab(temp,linha2);
-                       //ahead_token();
-                       return true;
-                }
-            }
-        }
-        else if(accept(";","","cg2")){
-            Item temp=new Item(nome,tipo,nome);
-            sem.add_variavel_tab(temp,linha);
-            ahead_token();
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Produ√ß√£o de m√©todo
-     *  <metodo>::= <tipo> id  '('<parametro> ')''{'<cg2> <return> '}' | void id '('<parametro>')''{' <cg2>'}'
-     * @return 
-     */
-    private boolean metodo(){
-        
-        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){
-            ahead_token();
-            if(accept("ID","<metodo>")){
-                ahead_token();
-                if(accept("(","","<metodo>")){
-                    ahead_token();
-                    if(parametro()){
-                        if(accept(")","","<metodo>")){
-                            ahead_token();
-                            if(accept("{","","<metodo>")){
-                                ahead_token();
-                                if(cg2()){
-                                    if(comandoRetorno()){
-                                        if(accept("}","","<metodo>")){
-                                            ahead_token();
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                    }
-                
-                }
-            }
-        }
-        //void id '('<parametro>')''{' <cg2>'}'
-        else if(accept("void","","<metodo>")){
-            ahead_token();
-            if(accept("ID","<metodo>")){
-            ahead_token();
-            if(accept("(","","<metodo>")){
-                if(parametro()){
-                    ahead_token();
-                    if(accept(")","","<metodo>")){
-                    ahead_token();
-                    if(accept("{","","<metodo>")){
-                        ahead_token();
-                        if(cg2()){
-                        if(accept("}","","<metodo>")){
-                            ahead_token();
-                            return true;
-                        }
-                        }
-                    }
-                    }
-                }
-            }
-            }
-            else{
-                return false;
-            } 
-    }
-        return false;
-    }
-    /**
-     * Produ√ß√£o de parametro
-     * <parametro> ::= <tipo> id <parametro2> |
-     * @return 
-     */
-    private boolean parametro(){
-        //usa aqui o parametro ou o tipo?
-        if(contains_primeiro("<parametro>",get_current_token().get_lexema())){
-            if(tipo()){
-                // pq guardar isso ?
-                String tipo=get_current_token().get_lexema();//guarda o nome da constante
-                ahead_token();
-                if(accept("ID","<parametro>")){
-                    ahead_token();
-                    if(parametro2()){
-                        return true;
-                    
-                    }
-                }
-                
-            }
-        }
-        else if(acceptVazio("<parametro>")){
-            System.out.println("Parametro vazio");
-            return true;
-        
-        }
-        return false;
-    }
-    
-    /**
-     * Produ√ß√£o de parametro 2 
-     * <parametro2>::=','<tipo> id <parametro2> |
-     * @return 
-     */
-    private boolean parametro2(){
-        if(contains_primeiro("<parametro2>",get_current_token().get_lexema())){
-            if(accept(",","","<parametro2>")){
-                ahead_token();
-                if(tipo()){
-                    ahead_token();
-                    if(accept("ID","<parametro2>")){
-                        parametro2();
-                        //ahead_token();
-                        return true;
-                    
-                    }
-                }
-            }
-        
-        }
-        else if(acceptVazio("<parametro2>")){
-            ahead_token();
-            return true;
-        
-        }
-        return false;
-    }
-    /**
-     * Produ√ß√£o de retorno 
-     * <return> ::= return <returnSufixo> '?' |
-     * @return 
-     */
-    private boolean comandoRetorno(){
-        if(contains_primeiro("<retorno>",get_current_token().get_lexema())){
-            ahead_token();
-            if(comandoRetornoSufixo()){
-                ahead_token();
-                if(accept(";","","<comandoRetorno>")){
-                    ahead_token();
-                    return true;
-                }
-            }
-        }
-        else if(acceptVazio("<retorno>")){
-            ahead_token();
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Produ√ß√£o de returnSufixo
-     * <returnSufixo>::=<expressao> | <valorL>
-     * @return 
-     */
-    private boolean comandoRetornoSufixo(){
-        if(expressao()){
-            return true;
-        }
-        else if(valor_literal()){
-            ahead_token();
-            return true;
-        }
-        return false;
-    
-    }
-    
-    /**
-     * Produ√ß√£o de atribui√ß√£o 
-     * <atribuicao> ::= id '=' <atribuicao2> ';' | <vetor> '=' <atribuicao2> ';'
-     * @return 
-     */
-    private boolean atribuicao(){
-        if(accept("ID","<atribuicao>")){
-            ahead_token();
-            if(accept("=","","atribuicao")){
-                ahead_token();
-                if(atribuicao2()){
-                    if(accept(";","","<atribuicao>")){
-                        ahead_token();
-                        return true;
-                    
-                    }
-                }
-            }
-            //<vetor> '=' <atribuicao2> '?'
-            else if(vetor()){
-                if(accept("=","","atribuicao")){
-                    ahead_token();
-                    if(atribuicao2()){
-                        if(accept(";","","atribuicao")){
-                            ahead_token();
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    /**
-     * ProduÁ„o de atribuiÁ„o 2 
-     * <atribuicao2> ::= <valorL> | <exp> | <instanciar>
-     * @return 
-     */
-     private boolean atribuicao2(){
-         if(valor_literal()){
-             ahead_token();
-             return true;
-             
-         }
-         else if(expressao()){
-             return true;
-         }
-         else if(instanciar()){
-             return true;
-         }
-        return false;
-    }
-     /**
-      * ProduÁ„o de vetor 
-      * <vetor> ::= id '[' <expN> ']' <col>
-      * @return 
-      */
-    private boolean vetor(){
-        if(accept("ID","<vetor>")){
-            ahead_token();
-            if(accept("[","","<vetor>")){
-                ahead_token();
-                if(expressao_numerica()){
-                    ahead_token();
-                    if(accept("]","","<vetor>")){
-                        ahead_token();
-                        if(coluna()){
-                            return true;
-                        }
-                        
-                    }
-                    
-                }
-            }
-        }
-        return false;
-    }
-    /**
-     * ProduÁ„o de comando 
-     * <comando> ::= <if> | <while> | <write> | <read>
-     * @return 
-     */
-    private boolean comando(){
-        if(comandoIf()){
-            return true;
-        
-        }
-        else if(comandoWhile()){
-            return true;
-        }
-        else if(comandoWrite()){
-            return true;
-        }
-        else if(comandoRead()){
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * ProduÁ„o de express„o 
-     * @return 
-     * <exp> ::= <exp_valor><F> | '!' <exp>
-     */
-    private boolean expressao(){
-        if(expressao_valor()){
-            if(F()){
-                return true;
-            }
-        }
-        else if(accept("!","","<expressao>")){
-            ahead_token();
-            expressao();
-            return true;
-        }
-        return false;
-    }
-    /**
-     * ProduÁ„o do instanciar
-     * <instanciar> ::= new id '(' <argumentos> ')'
-     * J· com o has_next_token() incluido
-     * @return 
-     */
-    private boolean instanciar(){
-        if(accept("new","","<instanciar>")){
-            if(has_next_token()){
-                ahead_token();
-                if(accept("ID","<instanciar>")){
-                    if(has_next_token()){
-                        ahead_token();
-                        if(accept("(","","<instanciar>")){
-                            if(has_next_token()){
-                                ahead_token();
-                                if(argumentos()){
-                                    if(has_next_token()){
-                                        if(accept(")","","<instanciar>")){
-                                            if(has_next_token()){
-                                                ahead_token();
-                                                return true;
-                                            }
-                                            //quando n„o tiver o prÛximo
-                                            else{
-                                            }
-                                        }
-                                    }
-                                    else{
-                                        return false;
-                                    }
-                                }
-                            }
-                            //quando n„o tiver o prÛximo 
-                            else{
-                            }
-                            
-                        }
-                    }
-                    //quando n„o tiver o prÛximo
-                    else{
-                        return false;
-                    }
-                    
-                }
-            
-            }
-            // o que fazer quando n„o tiver o prÛximo?
-            // quando n„o tiver o prÛximo
-            else{
-                return false;
-            }
-        }
-        return false;
-    }
-    private boolean expressao_numerica(){
-        return true;
-    }
-    private boolean coluna (){
-        return true;
-    }
-    private boolean comandoIf(){
-        return true;
-    }
-    private boolean comandoWhile(){
-        return true;
-    }
-    private boolean comandoWrite(){
-        return true;
-    }
-    private boolean comandoRead(){
-        return true;
-    }
-    private boolean expressao_valor(){
-        return true;
-    }
-    private boolean F(){
-        return true;
-    }
-    private boolean argumentos(){
-        return true;
-    }
-    //final do bloco que j√° adicionei
-    
-
-    
-    /**
-     * Testa se algum tipo √© aceito
+     * Testa se algum tipo È aceito
      * <tipo> ::= int | float | bool | char 
      */
     private boolean tipo(){
@@ -1052,7 +414,7 @@ public class Sintatico{
     }
         
     /**
-     * Testa se os valores s√£o aceitos
+     * Testa se os valores s„o aceitos
     *<valor> ::= <valorN> | <valorB> | <valorL>
     *<valorL> ::= cadeiaconstante | caractere 
     * @return valor 
@@ -1063,48 +425,355 @@ public class Sintatico{
     /*
     <mainclass> ::= class id <heranca> '{' <main> <cg1>'}'
     */
-    /**
-    private void mainclass(){
+    private void mainClass(){
         if(accept("class","","<mainclass>")){
+            System.out.println("Passou class");
             ahead_token();
             if(accept("ID","<mainclass>")){
+                System.out.println("Passou ID");
+                sem.add_classe_tab(get_current_token().get_lexema(),
+                        get_current_token().get_linha());
                 ahead_token();
                 if(heranca()){
+                    //System.out.println("Passou heranÁa "+get_current_token().get_lexema());
+                    ahead_token();
                     if(accept("{","","<mainclass>")){
-                        
+                        ahead_token();
+                        if(metodoMain()){
+                            ahead_token();
+                            //System.out.println("Saiu main "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+                            if(cg1()){
+                                //System.out.println("Passou CG1 "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+                                ahead_token();                                
+                                if(accept("}","DEL","<mainclass>")) {
+                                    System.out.println("Passou mainclass");
+                                    ahead_token();
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
+    /*
+    <classe> ::= class id <heranca> '{' <cg1> '}' <classe> |
+    */
+    private boolean classe(){
+        System.out.println("Entrou classe "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+        if(get_current_token().get_lexema().equals("class")){
+            ahead_token();
+            if(accept("ID","<classe>")){
+                sem.add_classe_tab(get_current_token().get_lexema(),
+                        get_current_token().get_linha());
+                ahead_token();
+                if(heranca()){
+                    System.out.println("Passou heranÁa "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+                    ahead_token();
+                    if(accept("{","","<classe>")){
+                        ahead_token();
+                        if(cg1()){
+                            System.out.println("Passou CG1 "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+                            ahead_token();
+                            if(accept("}","","<classe>")){
+                                ahead_token();
+                                if(classe()){
+                                    System.out.println("Passou classe");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }else if(acceptVazio("<classe>")){
+            System.out.println("Passou classe");
+            return true;
+        }else{
+            System.out.println("N„o Passou classe");
+            return false;
+        }
+    }
+    /*
+    <main> ::= void main '(' ')' '{' <cg2> '}'
+    */
+    private boolean metodoMain(){
+        System.out.println("Entrando main "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+        if(accept("void","","<main>")){
+            ahead_token();
+            if(accept("main","","<main>")){
+                ahead_token();
+                if(accept("(","","<main>")){
+                    ahead_token();
+                    if(accept(")","","<main>")){
+                        ahead_token();
+                        if(accept("{","","<main>")){
+                            ahead_token();
+                            if(cg2()){
+                                ahead_token();
+                                if(accept("}","DEL","<main>")){
+                                    System.out.println("Passou main "+get_current_token().get_lexema()+" "+get_current_token().get_linha());                              
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("N„o Passou main");
+        return false;
+    }
     /**
      * <heranca> ::= '(' id ')' |
      * @return 
     */
-    /**
-     * 
     private boolean heranca(){
-        if(accept("(","","<heranca>")){
+        System.out.println("Entrou heranÁa "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+        if(get_current_token().get_lexema().equals("(")){
             ahead_token();
             if(accept("ID","<heranca>")){
                 ahead_token();
                 if(accept(")","","<heranca>")){
                     ahead_token();
                     //uma heranca deve ser aceita se uma classe ja existir
+                    System.out.println("Passou heranÁa");
                     return true;
                 }
             }
             return false;
         }else if(acceptVazio("<heranca>")){
+            System.out.println("Passou heranÁa "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
             return true;
         }else{
+            System.out.println("N„o Passou heranÁa");
             return false;
         }        
         
-    
+    }
+    /*
+    <metodo> ::= <tipo> id '(' <parametro> ')''{' <cg2> <return> '}' | void id '(' <parametro> ')''{'
+    <cg2> '}'
     */
+    private boolean metodo(){
+        if(tipo()){
+            ahead_token();
+            if(accept("ID","<metodo>")){
+                ahead_token();
+                if(accept("(","DEL","<metodo>")){
+                    ahead_token();
+                    if(parametro()){
+                        ahead_token();
+                        if(accept(")","DEL","<metodo>")){
+                            ahead_token();
+                            if(accept("{","DEL","<metodo>")){
+                                ahead_token();
+                                if(cg2()){
+                                    ahead_token();
+                                    if(retorno()){
+                                        ahead_token();
+                                        if(accept("}","DEL","<metodo>")){
+                                            ahead_token();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }else if(accept("void","RES","<metodo>")){
+            ahead_token();
+            if(accept("ID","<metodo>")){
+                ahead_token();
+                if(accept("(", "DEL","<metodo>")){
+                    ahead_token();
+                    if(parametro()){
+                        ahead_token();
+                        if(accept(")", "DEL","<metodo>")){
+                            ahead_token();
+                            if(cg2()){
+                                ahead_token();
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
     /**
-     * Este metodo chama o n√£o terminal inicial <programa> da gramatica para a analise sintatica.
+     * Produ√ß√£o de variavel 
+     * <variavel> ::= <tipo> id <variavelinha> | <declara_vetor>
+     * @return 
+     */
+    
+    private boolean variavel(){
+        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){
+            if(tipo()){
+                String tipo=get_current_token().get_lexema();//guarda o nome da constante
+                ahead_token();
+                if(accept("ID","<variavel>")){
+                    String nome = get_current_token().get_lexema();
+                    String linha = get_current_token().get_linha();
+                    ahead_token();
+                    if(variavelLinha(tipo,nome,linha)){
+                        
+                    }
+                }
+            }
+        }
+        else if(contains_primeiro("<declara_vetor>",get_current_token().get_lexema())){
+            return true;
+        }
+        return false;
+    }
+    
+    /*
+    <parametro> ::= <tipo> id <parametro2> |
+    */
+    private boolean parametro() {
+        if(tipo()){
+            ahead_token();
+            if(accept("ID","<parametro>")){
+                ahead_token();
+                if(parametro2()){
+                    ahead_token();
+                    return true;
+                }
+            }
+            return false;
+        }else if(acceptVazio("<parametro>")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /*
+    <parametro2> ::= ',' <tipo> id <parametro2> |
+    */
+    private boolean parametro2(){
+        if(accept(",","DEL","<parametro2>")){
+            ahead_token();
+            if(tipo()){
+                ahead_token();
+                if(accept("ID","<parametro>")){
+                    ahead_token();
+                    if(parametro2()){
+                        ahead_token();
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }else if(acceptVazio("<parametro2>")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+        
+    /*
+    <cg1> ::= <variavel><cg1> | <metodo><cg1> | !<atribuicao><cg1> |
+    */
+    private boolean cg1(){
+        System.out.println("Entrou cg1 " + get_current_token().get_lexema());
+        if(tipo()){
+            String tipo=get_current_token().get_lexema();//guarda o nome da constante
+            ahead_token();
+            if(accept("ID","<cg1>")){
+                String nome = get_current_token().get_lexema();
+                String linha = get_current_token().get_linha();
+                ahead_token();
+                if(accept("(","DEL","cg1")){
+                    if(metodo()){
+                        ahead_token();
+                        if(cg1()){
+                            System.out.println("Passou cg1");
+                            return true;
+                        }
+                    }
+                }else if(variavelLinha(nome,tipo,linha)){
+                    System.out.println("N„o Passou cg1");
+                    return false;
+                }else{
+                    System.out.println("N„o Passou cg1");
+                    return false;
+                }
+            }
+            return false;
+        }else if(acceptVazio("<cg1>")){
+            System.out.println("Passou Vazio cg1 " + get_current_token().get_lexema()+" "+get_current_token().get_linha());
+            return true;
+        }else{
+            System.out.println("N„o Passou cg1");
+            return false;
+        }
+    }
+    /*
+    <cg2> ::= <atribuicao><cg2> | <variavel><cg2> | <comando><cg2> | <exp> '?' <cg2> |
+    <chamarMetodo> '?' <cg2> | <instanciar> '?' <cg2> |
+    */
+    private boolean cg2() {
+        if(false){
+            return false;
+        }else if(acceptVazio("<cg2>")){
+            System.out.println("Passou Vazio CG2 "+get_current_token().get_lexema());
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /*
+    <return> ::= return <returnSufixo> '?' |
+    */
+    private boolean retorno(){
+        if(accept("return","RES","<return>")){
+            if(returnSufixo()){
+                ahead_token();
+                if(accept(";","DEL","<return>")){
+                    ahead_token();
+                    return true;
+                }
+            }
+            return false;
+        }else if(acceptVazio("<return>")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /*
+    <return> ::= return <returnSufixo> '?' |
+    */
+    private boolean returnSufixo(){
+        if(accept("return","RES","<return>")){
+            ahead_token();
+            if(returnSufixo()){
+                ahead_token();
+                if(accept(";","DEL","<returnSufixo>")){
+                    ahead_token();
+                    return true;
+                }
+            }
+            return false;
+        }else if(acceptVazio("<returnSufixo>")){
+            return true;
+        }else{
+            return false;
+        }
+    }    
+
+    private boolean variavelLinha(String tipo, String nome, String linha) {
+        return false;
+    }
+    /**
+     * Este metodo chama o n„o terminal inicial <programa> da gramatica para a analise sintatica.
      * @throws IOException 
      */
     public void analiser() throws IOException{     
@@ -1112,4 +781,5 @@ public class Sintatico{
         openFiletoWrite();
         programa();
     }
+
 }

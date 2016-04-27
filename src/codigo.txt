@@ -1,5 +1,7 @@
-const{
-int a=3;
-bool b=2;
+class id{
+    void main(){
+    }
 }
-class
+class id2{
+
+}

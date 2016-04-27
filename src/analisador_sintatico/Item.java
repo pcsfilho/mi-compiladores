@@ -1,12 +1,11 @@
 package analisador_sintatico;
-
 import java.util.Objects;
-
+import java.io.Serializable;
 /**
  *
  * @author Paulo
  */
-public class Item{
+public class Item implements Serializable{
     
     private String nome;
     private String tipo;
