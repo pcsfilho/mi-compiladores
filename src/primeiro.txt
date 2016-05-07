@@ -10,8 +10,8 @@
 <argumentos>#!#true#false#NUM_I#NUM_F#ID#(#;#new#CAD#CAR#vazio
 <valor>#NUM_I#NUM_F#CAD#CAR#true#false
 <valorB>#true#false 
-<valorL>#CAD#CAR 
-<valorN>#NUM_F#NUM_I 
+<valorL>#CAD#CAR
+<valorN>#NUM_F#NUM_I
 <argumentos2>#,#vazio
 <argumentosVar>#ID
 <argumentosVar2>#,#vazio
@@ -26,3 +26,6 @@
 <variavel>#int#float#bool#char
 <variavelinha>#,#;
 <programa>#const#int#float#bool#char#class
+<return>#return#vazio
+<returnSufixo>#!#true#false#NUM_I#NUM_F#ID#(#;#new#CAD#CAR
+<metodo>#int#float#char#string#bool#void

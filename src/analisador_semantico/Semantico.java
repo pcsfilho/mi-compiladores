@@ -1,26 +1,25 @@
 package analisador_semantico;
-
 import analisador_sintatico.Item;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class Semantico {
     private ArrayList<Item> constantes_tab;//armazena o conjunto primeiro de cada não terminal
     private ArrayList<Item> var_globais_tab;//armazena o conjunto primeiro de cada não terminal
-    private Hashtable<String,Escopo> classe_tab;
-    private ArrayList<Item> heranca_tab;//armazena o conjunto primeiro de cada não terminal
-    private ArrayList<Item> variavel_tab;//armazena o conjunto primeiro de cada não terminal
-
+    private Hashtable<String,Classe> classe_tab;   
+    private String funcao_current;//Armazena o nome da função armazenada no momento
+        
     public Semantico(){
         constantes_tab=new ArrayList<Item>();
         var_globais_tab=new ArrayList<Item>();
         classe_tab=new Hashtable<>();
-        heranca_tab= new ArrayList<Item>();
-        variavel_tab= new ArrayList<Item>();
+        funcao_current="";
     }
     
     /*
-    
+    Esta função adiciona as constantes em uma lista ordenada. Caso o identificador seja unico e o valor seja compativel a constante é adicionada
+    na lista. Caso contrario é relatado um erro semântico.
     */
     public void add_contantes_tab(Item item, String linha){
         if(!(constantes_tab.contains(item))){
@@ -38,6 +37,8 @@ public class Semantico {
         }
     }
     /*
+    Esta função adiciona as variaveis globais em uma lista ordenada. Caso o identificador seja unico a variavel é adicionada
+    na lista. Caso contrario é relatado um erro semântico.
     */
     public void add_var_globals_tab(Item item, String linha){
         if(!(constantes_tab.contains(item))){
@@ -48,30 +49,56 @@ public class Semantico {
     }
     
     /*
+    Esta função adiciona as classes em uma tabela. Caso o identificador da classe seja unico a classe é adicionada
+    na tabela. Caso contrario é relatado um erro semântico. A chave de cada elemento é o nome da propria classe. 
     */
-    public void add_classe_tab(String classe, String linha){
+    public void add_classe_tab(String classe, String linha,String heranca){
         if(!(classe_tab.containsKey(classe))){//Se não contem nenhuma outra classe com este nome
-            System.out.println("Adicionou classe");
-            classe_tab.put(classe,new Escopo(classe));//Adiciona na tabela
+            classe_tab.put(classe,new Classe(classe,heranca,linha));//Adiciona na tabela
         }else{
             System.out.println("Erro semantico, linha "+ linha +",ja existe classe com o nome "+classe);
         }
     }
-    
-       public void add_heranca_tab(Item item , String linha){
-    if(!(heranca_tab.contains(item))){
-                heranca_tab.add(item);
-        }else{
-            System.out.println("Erro semantico, linha "+ linha +",ja existe uma heranca com este nome");
+    /*
+    Verifica ao final da analise semântica se as classes declaradas como heranca existem na tabela de classes.
+    */
+    public void verifica_heranca(){
+        Set<String> nomes = classe_tab.keySet();//Conjunto de chaves da tabela de classes.
+        for (String nome : nomes){
+            
+/*            for(int i=0;i<classe_tab.get(nome).get_funcoes().size();i++){
+                for(int j=0;j<classe_tab.get(nome).get_funcoes().get(i).getParametros().size();j++){
+                    for(int k=0;k<classe_tab.get(nome).get_funcoes().get(i).getParametros().size();k++){
+                        System.out.println(classe_tab.get(nome).get_funcoes().get(i).getParametros().get(k));
+                    }
+                }
+                
+            }*/
+            
+            if(!(classe_tab.get(nome).get_heranca().equals(""))){//Se existe herança
+                String heranca=classe_tab.get(nome).get_heranca();
+                String linha=classe_tab.get(nome).get_linha();
+                boolean contem = classe_tab.containsKey(heranca);//verifica se a classe herança existe
+                if(!contem){
+                    System.out.println("Erro semantico, linha "+ linha +",Não existe uma Classe "+ heranca+" para ser herdada");
+                }
+            }
         }
    }
    // rever essa adição para ser consciente com o valor padrão
-   public void add_variavel_tab(Item item , String linha){
+   /*public void add_variavel_tab(Item item , String linha){
     if(!(variavel_tab.contains(item))){
                 variavel_tab.add(item);
         }else{
             System.out.println("Erro semantico, linha "+ linha +",ja existe uma variavel com este nome");
         }
-   }
-    
+   }*/
+   
+    /*
+    Esta função adiciona os metodos de uma classe em uma lista ordenada. Caso o identificador da classe seja unico o metodo eh adicionado
+    na lista. Caso contrario é relatado um erro semântico.
+    */
+   public void add_metodo(String escopo, Item item,String linha){
+       classe_tab.get(escopo).add_metodo(item, linha);
+   }    
 }

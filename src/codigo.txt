@@ -1,7 +1,18 @@
 class id{
     void main(){
+
+    }
+    
+    char metodo(){        
+        return 'a';
     }
 }
 class id2{
-
+    char main(){        
+        return 'a';
+    }
+    
+    char metodo1(){        
+        return 'a';
+    }
 }
