@@ -850,6 +850,7 @@ public class Sintatico{
             System.out.println("Escolheu valorL "+get_current_token().get_lexema());
             if(valor_literal()){
                 System.out.println("Passou valorL "+get_current_token().get_lexema());
+                sem.verifica_retorno(currentItem, get_current_token().get_padrao(),get_current_token().get_linha());//verifica se o tipo de retorno esta correto.
                 return true;
             }            
             return false;

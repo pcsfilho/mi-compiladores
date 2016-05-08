@@ -108,5 +108,15 @@ public class Semantico {
        }else{
             System.out.println("Erro semantico, linha "+ linha +",ja existe parametro com este nome");
        }
-   }   
+   } 
+   
+   public void verifica_retorno(Item metodo, String tipo, String linha){
+       System.out.println(metodo.get_tipo()+" "+tipo);
+        if(!((metodo.get_tipo().equals("char") && tipo.equals("CAR"))||(metodo.get_tipo().equals("string") && tipo.equals("CAD"))||
+                (metodo.get_tipo().equals("int") && tipo.equals("NUM_I"))||
+                (metodo.get_tipo().equals("float") && tipo.equals("NUM_F"))||
+                (metodo.get_tipo().equals("bool") && (tipo.equals("true")||tipo.equals("false"))))){
+            System.out.println("Erro semantico, linha "+ linha +",o tipo de retorno não corresponde ao tipo da função");
+        }
+   }
 }

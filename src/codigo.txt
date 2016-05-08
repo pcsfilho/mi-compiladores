@@ -3,7 +3,7 @@ class id{
 
     }
     
-    char metodo(char a, char b,int c){        
+    char metodo(){        
         return 'a';
     }
 }
