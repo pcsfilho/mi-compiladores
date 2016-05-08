@@ -45,7 +45,7 @@ public class Item implements Serializable{
         return this.nome;
     }
     
-    public ArrayList getParametros(){
+    public ArrayList<Item> getParametros(){
         return this.parametros;
     }
     

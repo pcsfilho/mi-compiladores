@@ -3,16 +3,7 @@ class id{
 
     }
     
-    char metodo(){        
-        return 'a';
-    }
-}
-class id2{
-    char main(){        
-        return 'a';
-    }
-    
-    char metodo1(){        
+    char metodo(char a, char b,int c){        
         return 'a';
     }
 }

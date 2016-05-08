@@ -3,20 +3,17 @@ import analisador_sintatico.Item;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
-
 public class Semantico {
     private ArrayList<Item> constantes_tab;//armazena o conjunto primeiro de cada não terminal
     private ArrayList<Item> var_globais_tab;//armazena o conjunto primeiro de cada não terminal
     private Hashtable<String,Classe> classe_tab;   
-    private String funcao_current;//Armazena o nome da função armazenada no momento
-        
+    private String funcao_current;//Armazena o nome da função armazenada no momento   
     public Semantico(){
         constantes_tab=new ArrayList<Item>();
         var_globais_tab=new ArrayList<Item>();
         classe_tab=new Hashtable<>();
         funcao_current="";
     }
-    
     /*
     Esta função adiciona as constantes em uma lista ordenada. Caso o identificador seja unico e o valor seja compativel a constante é adicionada
     na lista. Caso contrario é relatado um erro semântico.
@@ -47,7 +44,6 @@ public class Semantico {
             System.out.println("Erro semantico, linha "+ linha +",ja existe constante com este nome");
         }
     }
-    
     /*
     Esta função adiciona as classes em uma tabela. Caso o identificador da classe seja unico a classe é adicionada
     na tabela. Caso contrario é relatado um erro semântico. A chave de cada elemento é o nome da propria classe. 
@@ -65,15 +61,15 @@ public class Semantico {
     public void verifica_heranca(){
         Set<String> nomes = classe_tab.keySet();//Conjunto de chaves da tabela de classes.
         for (String nome : nomes){
-            
-/*            for(int i=0;i<classe_tab.get(nome).get_funcoes().size();i++){
-                for(int j=0;j<classe_tab.get(nome).get_funcoes().get(i).getParametros().size();j++){
-                    for(int k=0;k<classe_tab.get(nome).get_funcoes().get(i).getParametros().size();k++){
-                        System.out.println(classe_tab.get(nome).get_funcoes().get(i).getParametros().get(k));
+            System.out.println("Nome Classe: "+classe_tab.get(nome).get_nome());
+            for(int i=0;i<classe_tab.get(nome).get_funcoes().size();i++){
+                System.out.println("Nome Função: "+classe_tab.get(nome).get_funcoes().get(i).get_nome());
+                if(classe_tab.get(nome).get_funcoes().get(i).getParametros()!=null){
+                    for(int j=0;j<classe_tab.get(nome).get_funcoes().get(i).getParametros().size();j++){
+                        System.out.println("Nome parametro: "+classe_tab.get(nome).get_funcoes().get(i).getParametros().get(j).get_nome());
                     }
-                }
-                
-            }*/
+                }                                    
+            }
             
             if(!(classe_tab.get(nome).get_heranca().equals(""))){//Se existe herança
                 String heranca=classe_tab.get(nome).get_heranca();
@@ -101,4 +97,16 @@ public class Semantico {
    public void add_metodo(String escopo, Item item,String linha){
        classe_tab.get(escopo).add_metodo(item, linha);
    }    
+   /*
+   Esta função adiciona os parametros de um metodo em uma lista ordenada. Caso o identificador de parametro seja unico o parametro eh adicionado
+   na lista. Caso contrario é relatado um erro semântico.
+   */
+   public void add_parametro_metodo(Item metodo, Item item,String linha){
+       if(!(metodo.getParametros().contains(item))){
+          metodo.getParametros().add(item);
+          System.out.println("Adicionou parametro "+item.get_nome());
+       }else{
+            System.out.println("Erro semantico, linha "+ linha +",ja existe parametro com este nome");
+       }
+   }   
 }

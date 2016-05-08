@@ -453,7 +453,7 @@ public class Sintatico{
                     ahead_token();
                     if(accept("{","","<mainclass>")){
                         ahead_token();
-                        if(metodoMain()){
+                        if(metodoMain(nome)){
                             ahead_token();
                             //System.out.println("Saiu main "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
                             if(cg1(nome)){
@@ -517,10 +517,13 @@ public class Sintatico{
     /*
     <main> ::= void main '(' ')' '{' <cg2> '}'
     */
-    private boolean metodoMain(){
+    private boolean metodoMain(String nomeClasse){
         if(accept("void","","<main>")){
             ahead_token();
             if(accept("main","","<main>")){
+                String nome = get_current_token().get_lexema();
+                currentItem=new Item("main","void",nomeClasse);//cria um item metodo que contem o nome,tipo e escopo deste metodo
+                sem.add_metodo(nomeClasse,currentItem,get_current_token().get_linha());
                 ahead_token();
                 if(accept("(","","<main>")){
                     ahead_token();
@@ -588,7 +591,7 @@ public class Sintatico{
                 currentItem=new Item(nome,tipo,nomeClasse);//cria um item metodo que contem o nome,tipo e escopo deste metodo
                 sem.add_metodo(nomeClasse,currentItem,get_current_token().get_linha());
                 ahead_token();
-                System.out.println("Passou tipo "+get_current_token().get_lexema());
+                System.out.println("Passou ID "+get_current_token().get_lexema());
                 if(accept("(","DEL","<metodo>")){
                     ahead_token();
                     System.out.println("Passou ( "+get_current_token().get_lexema());
@@ -597,7 +600,7 @@ public class Sintatico{
                         System.out.println("Passou parametro "+get_current_token().get_lexema());
                         if(accept(")","DEL","<metodo>")){
                             ahead_token();
-                            System.out.println("Passou )"+get_current_token().get_lexema());
+                            System.out.println("Passou ) "+get_current_token().get_lexema());
                             if(accept("{","DEL","<metodo>")){
                                 ahead_token();
                                 System.out.println("Passou { "+get_current_token().get_lexema());
@@ -698,11 +701,10 @@ public class Sintatico{
                    currentItem.criaListaParametro();
                 }
                 String nome=get_current_token().get_lexema();
-                currentItem.getParametros().add(new Item(nome, tipo));//passa parametro pra lista de parametros do metodo
+                sem.add_parametro_metodo(currentItem, new Item(nome, tipo),get_current_token().get_linha());//passa parametro pra lista de parametros do metodo
                 ahead_token();
                 System.out.println("Passou ID "+get_current_token().get_lexema());
                 if(parametro2()){
-                    ahead_token();
                     System.out.println("Passou parametro2 "+get_current_token().get_lexema());
                     return true;
                 }
@@ -722,7 +724,7 @@ public class Sintatico{
     */
     private boolean parametro2(){
         System.out.println("Entrou parametro2 "+get_current_token().get_lexema());
-        if(accept(",","DEL","<parametro2>")){
+        if(get_current_token().get_lexema().equals(",")){
             ahead_token();
             System.out.println("Passou , "+get_current_token().get_lexema());
             if(tipo()){
@@ -731,11 +733,10 @@ public class Sintatico{
                 System.out.println("Passou tipo "+get_current_token().get_padrao());
                 if(accept("ID","<parametro>")){
                     String nome=get_current_token().get_lexema();
-                    currentItem.getParametros().add(new Item(nome, tipo));//passa parametro pra lista de parametros do metodo
+                    sem.add_parametro_metodo(currentItem, new Item(nome, tipo),get_current_token().get_linha());//passa parametro pra lista de parametros do metodo
                     ahead_token();
-                    System.out.println("Passou tipo "+get_current_token().get_lexema());
+                    System.out.println("Passou ID "+get_current_token().get_lexema());
                     if(parametro2()){
-                        ahead_token();
                         System.out.println("Passou parametro2 "+get_current_token().get_lexema());
                         return true;
                     }
