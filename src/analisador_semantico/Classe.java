@@ -51,6 +51,27 @@ public class Classe implements Serializable{
         }
     }
     
+    public void add_variavel(String nomeMetodo,Item item, String linha){
+        String nome=null;
+        for(int i=0;i<funcoes_tab.size();i++){
+            if(funcoes_tab.get(i).get_nome().equals(nomeMetodo)){
+                nome=funcoes_tab.get(i).get_nome();
+                System.out.println("Função encontrada: "+nome);  
+                if(funcoes_tab.get(i).getVariaveis()==null){//se ainda n existe nenhuma variavel na função
+                    funcoes_tab.get(i).criaListaVariaveis();//cria lista de variaveis.
+                }                
+                if(!(funcoes_tab.get(i).getVariaveis().contains(item))){
+                    funcoes_tab.get(i).getVariaveis().add(item);
+                    System.out.println("Add variavel: "+funcoes_tab.get(i).getVariaveis().get(funcoes_tab.get(i).getVariaveis().size()-1).get_nome()
+                    +" em "+funcoes_tab.get(i).getVariaveis().get(funcoes_tab.get(i).getVariaveis().size()-1).getEscopo());  
+                }else{
+                    System.out.println("Erro semantico, linha "+ linha +",ja existe uma variavel com este nome");
+                }
+                break;
+            }
+        }
+    }
+    
     
     
     @Override

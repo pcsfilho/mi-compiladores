@@ -38,10 +38,11 @@ public class Semantico {
     na lista. Caso contrario é relatado um erro semântico.
     */
     public void add_var_globals_tab(Item item, String linha){
-        if(!(constantes_tab.contains(item))){
-                constantes_tab.add(item);
+        if(!(var_globais_tab.contains(item))){
+                var_globais_tab.add(item);
+                System.out.println("Add variavel global "+item.get_nome()+" "+item.getEscopo());
         }else{
-            System.out.println("Erro semantico, linha "+ linha +",ja existe constante com este nome");
+            System.out.println("Erro semantico, linha "+ linha +",ja existe variavel global com este nome");
         }
     }
     /*
@@ -82,13 +83,18 @@ public class Semantico {
         }
    }
    // rever essa adição para ser consciente com o valor padrão
-   /*public void add_variavel_tab(Item item , String linha){
-    if(!(variavel_tab.contains(item))){
-                variavel_tab.add(item);
-        }else{
-            System.out.println("Erro semantico, linha "+ linha +",ja existe uma variavel com este nome");
-        }
-   }*/
+   public void add_variavel_tab(Item item , String linha, String escopo){
+       String temp;
+       String[] split;
+       split=escopo.split("#");
+       if(!(var_globais_tab.contains(item) && constantes_tab.contains(item))){
+           System.out.println("Add variavel no escopo: "+item.getEscopo());
+           classe_tab.get(split[0]).add_variavel(split[1],item,linha);
+       }else{
+           System.out.println("Erro semantico, linha "+ linha +",ja existe uma variavel global ou constante com este nome");
+       }
+       
+   }
    
     /*
     Esta função adiciona os metodos de uma classe em uma lista ordenada. Caso o identificador da classe seja unico o metodo eh adicionado

@@ -11,7 +11,9 @@ public class Item implements Serializable{
     private String tipo;
     private String valor;
     private String escopo;//Guarda escopo ao qual pertence o item.
-    private ArrayList<Item> parametros;//armazena lista de parametros se o item for uma função
+    private ArrayList<Item> parametros;//armazena lista de parametros se o item for uma função, se este item for um metodo
+    private ArrayList<Item> variaveis;//armazena lista de variaveis para algum escopo
+    private ArrayList<Item> escopos;//armazena lista de escopos caso necessite. 
     
     //Constantes e variaveis globais
     public Item(String nome,String tipo, String valor, String escopo){
@@ -25,6 +27,7 @@ public class Item implements Serializable{
     public Item(String nome,String tipo,String escopo){
         this.nome=nome;
         this.tipo=tipo;
+        this.escopo=escopo;
     }
     
     public Item(String nome,String tipo){
@@ -49,9 +52,28 @@ public class Item implements Serializable{
         return this.parametros;
     }
     
+    
+    public ArrayList<Item> getVariaveis(){
+        return this.variaveis;
+    }
+    
     //Cria uma lista de parametros
     public void criaListaParametro(){
         this.parametros=new ArrayList<Item>();
+    }
+    
+    //Cria uma lista de variaveis
+    public void criaListaVariaveis(){
+        this.variaveis=new ArrayList<Item>();
+    }
+    
+    //Cria uma lista de escopos
+    public void criaListaEscopos(){
+        this.escopos=new ArrayList<Item>();
+    }
+    
+    public String getEscopo(){
+        return this.escopo;
     }
     
     @Override

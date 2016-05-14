@@ -27,6 +27,7 @@ public class Sintatico{
     private boolean error;//armazena um erro sintatico caso ocorra. 
     private String[] reservedsWords;
     private Item currentItem;//item manipulado no momento
+    private String escopo;//Guarda escopo atual
     /**
      * Este método inicializa os atributos da classe Sintatico. Abre o arquivo de leitura e inicializa
      * o array de tokens para a analise sintatica. Tambem inicialisa o conjunto seguinte e primeiro.
@@ -325,9 +326,10 @@ public class Sintatico{
             //System.out.println("Passou programa");
             //Olhar tambem o proximo token
         }else if(contains_primeiro("<variavel>", get_current_token().get_lexema())){
-            System.out.println("Passou variavel "+get_current_token().get_lexema());
-            //variavel();
-            //programa();
+            System.out.println("Passou para variavel "+get_current_token().get_lexema());
+            escopo=null;
+            variavel();
+            programa();
         }else if(contains_primeiro("<mainclass>", get_current_token().get_lexema())){
             System.out.println("Passou mainclass "+get_current_token().get_lexema());
             mainClass();
@@ -442,26 +444,31 @@ public class Sintatico{
     */
     private void mainClass(){
         if(accept("class","","<mainclass>")){
-            System.out.println("Passou class");
             ahead_token();
+            System.out.println("Passou classMain "+get_current_token().get_lexema());
             if(accept("ID","<mainclass>")){
                 String nome=get_current_token().get_lexema();
                 String linha=get_current_token().get_linha();
+                escopo=nome;//guarda o nome da classe como o escopo atual
                 ahead_token();
+                System.out.println("Passou ID "+get_current_token().get_lexema());
                 if(heranca(nome,linha)){
                     //System.out.println("Passou herança "+get_current_token().get_lexema());
                     ahead_token();
+                    System.out.println("Passou heranca "+get_current_token().get_lexema());
                     if(accept("{","","<mainclass>")){
                         ahead_token();
-                        if(metodoMain(nome)){
+                        System.out.println("Passou colchete "+get_current_token().get_lexema());
+                        if(metodoMain()){
                             ahead_token();
-                            //System.out.println("Saiu main "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
-                            if(cg1(nome)){
-                                //System.out.println("Passou CG1 "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
-                                ahead_token();                                
+                            System.out.println("Saiu main "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+                            if(cg1()){
+                                System.out.println("Passou CG1 "+get_current_token().get_lexema()+" "+get_current_token().get_linha());
+                                ahead_token();                            
                                 if(accept("}","DEL","<mainclass>")) {
                                     System.out.println("Passou mainclass");
                                     ahead_token();
+                                    escopo=null;//reinicia o escopo
                                 }
                             }
                         }
@@ -469,6 +476,7 @@ public class Sintatico{
                 }
             }
         }
+        System.out.println("N Passou classMain ");
     }
     /*
     <classe> ::= class id <heranca> '{' <cg1> '}' <classe> |
@@ -489,7 +497,7 @@ public class Sintatico{
                     if(accept("{","","<classe>")){
                         ahead_token();
                         System.out.println("Passou { "+get_current_token().get_lexema());
-                        if(cg1(nome)){
+                        if(cg1()){
                             ahead_token();
                             System.out.println("Passou cg1 "+get_current_token().get_lexema());
                             if(accept("}","","<classe>")){
@@ -497,6 +505,7 @@ public class Sintatico{
                                 System.out.println("Passou } "+get_current_token().get_lexema());
                                 if(classe()){
                                     System.out.println("Passou classe "+get_current_token().get_lexema());
+                                    escopo=null;//reinicia o escopo
                                     return true;
                                 }
                             }
@@ -517,23 +526,31 @@ public class Sintatico{
     /*
     <main> ::= void main '(' ')' '{' <cg2> '}'
     */
-    private boolean metodoMain(String nomeClasse){
+    private boolean metodoMain(){
         if(accept("void","","<main>")){
             ahead_token();
+            System.out.println("Passou void "+ get_current_token().get_lexema());
             if(accept("main","","<main>")){
                 String nome = get_current_token().get_lexema();
-                currentItem=new Item("main","void",nomeClasse);//cria um item metodo que contem o nome,tipo e escopo deste metodo
-                sem.add_metodo(nomeClasse,currentItem,get_current_token().get_linha());
+                currentItem=new Item("main","void",escopo);//cria um item metodo que contem o nome,tipo e escopo deste metodo
+                sem.add_metodo(escopo,currentItem,get_current_token().get_linha());
+                escopo=escopo+"#"+nome;//guarda o nome da classe mais o nome do metodo, por exemplo: escopo=nomeClasse.main
                 ahead_token();
+                System.out.println("Passou main "+ get_current_token().get_lexema());
                 if(accept("(","","<main>")){
                     ahead_token();
+                    System.out.println("Passou ( "+ get_current_token().get_lexema());
                     if(accept(")","","<main>")){
                         ahead_token();
+                        System.out.println("Passou ) "+ get_current_token().get_lexema());
                         if(accept("{","","<main>")){
                             ahead_token();
+                            System.out.println("Passou { "+ get_current_token().get_lexema());
                             if(cg2()){
                                 ahead_token();
-                                if(accept("}","DEL","<main>")){
+                                System.out.println("Passou CG2 "+ get_current_token().get_lexema());
+                                if(get_current_token().get_lexema().equals("}")){
+                                    System.out.println("Passou metodoMain "+ get_current_token().get_lexema());
                                     return true;
                                 }
                             }
@@ -542,6 +559,7 @@ public class Sintatico{
                 }
             }
         }
+        System.out.println("N Passou metodoMain "+ get_current_token().get_lexema());
         return false;
     }
     /**
@@ -579,7 +597,7 @@ public class Sintatico{
     <metodo> ::= <tipo> id '(' <parametro> ')''{' <cg2> <return> '}' | void id '(' <parametro> ')''{'
     <cg2>'}'
     */
-    private boolean metodo(String nomeClasse){
+    private boolean metodo(){
         System.out.println("Entrou Metodo "+get_current_token().get_lexema());
         if(tipo()){
             String tipo = get_current_token().get_lexema();
@@ -588,8 +606,9 @@ public class Sintatico{
             System.out.println("Passou tipo "+get_current_token().get_padrao());
             if(accept("ID","<metodo>")){
                 String nome = get_current_token().get_lexema();
-                currentItem=new Item(nome,tipo,nomeClasse);//cria um item metodo que contem o nome,tipo e escopo deste metodo
-                sem.add_metodo(nomeClasse,currentItem,get_current_token().get_linha());
+                currentItem=new Item(nome,tipo,escopo);//cria um item metodo que contem o nome,tipo e escopo deste metodo
+                sem.add_metodo(escopo,currentItem,get_current_token().get_linha());
+                escopo=escopo+"#"+nome;//atualiza escopo: classe.nomeMetodo
                 ahead_token();
                 System.out.println("Passou ID "+get_current_token().get_lexema());
                 if(accept("(","DEL","<metodo>")){
@@ -667,24 +686,37 @@ public class Sintatico{
      */
     
     private boolean variavel(){
+        //<tipo> id <variavelinha>
         if(contains_primeiro("<tipo>",get_current_token().get_lexema())){
+            System.out.println("Indo para tipo");
             if(tipo()){
                 String tipo=get_current_token().get_lexema();//guarda o nome da constante
                 ahead_token();
+                System.out.println("Passou tipo "+get_current_token().get_padrao());
                 if(accept("ID","<variavel>")){
                     String nome = get_current_token().get_lexema();
                     String linha = get_current_token().get_linha();
                     ahead_token();
+                    System.out.println("Passou ID "+get_current_token().get_lexema());
                     if(variavelLinha(tipo,nome,linha)){
-                        
+                        ahead_token();
+                        System.out.println("Passou Variavel "+get_current_token().get_lexema());
+                        return true;
                     }
                 }
             }
+            System.out.println("N passou variavel "+get_current_token().get_lexema());
+            return false;
         }
+        //<declara_vetor>
         else if(contains_primeiro("<declara_vetor>",get_current_token().get_lexema())){
+            System.out.println("Passou para declaraVetor "+get_current_token().get_lexema());
             return true;
+        }else{
+            System.out.println("N passou variavel "+get_current_token().get_lexema());
+            return false;
         }
-        return false;
+        
     }
     
     /*
@@ -757,7 +789,7 @@ public class Sintatico{
     <cg1> ::= <variavel><cg1> | <metodo><cg1> | !<atribuicao><cg1> |
     Tem como parametro o nome da classe(escopo) ao qual faz parte
     */
-    private boolean cg1(String nomeClasse){
+    private boolean cg1(){
         System.out.println("Entrou cg1 " + get_current_token().get_lexema());
         if((tipo() && get_token_from_index(1).get_padrao().equals("ID") && 
                 get_token_from_index(2).get_lexema().equals(",") || get_token_from_index(2).get_lexema().equals(";"))){//escolhe a prrimeira producao. <variavel><cg1>
@@ -765,7 +797,7 @@ public class Sintatico{
             if (variavel()){
                 ahead_token();
                 System.out.println("Passou variavel "+get_current_token().get_lexema());
-                if(cg1(nomeClasse)){
+                if(cg1()){
                     System.out.println("Passou cg1 "+get_current_token().get_lexema());
                     return true;
                 }
@@ -774,10 +806,10 @@ public class Sintatico{
         }else if((tipo()|| get_current_token().get_lexema().equals("void")) && (get_token_from_index(1).get_padrao().equals("ID") && 
                 get_token_from_index(2).get_lexema().equals("("))){//escolhe a segunda producao. <metodo><cg1>
             System.out.println("Escolheu metodo "+get_current_token().get_lexema());
-            if(metodo(nomeClasse)){
+            if(metodo()){
                 ahead_token();
                 System.out.println("Passou metodo "+get_current_token().get_lexema());
-                if(cg1(nomeClasse)){
+                if(cg1()){
                     System.out.println("Passou cg1 "+get_current_token().get_lexema());
                     return true;
                 }
@@ -798,7 +830,17 @@ public class Sintatico{
     */
     private boolean cg2(){
         System.out.println("Entrou cg2 "+get_current_token().get_lexema());
-        if(false){
+        //<variavel><cg2>
+        if(contains_primeiro("<tipo>",get_current_token().get_lexema())){
+            System.out.println("Entrou para variavel "+get_current_token().get_lexema());
+            if(variavel()){
+                ahead_token();
+                System.out.println("Passou variavel "+get_current_token().get_lexema());
+                if(cg2()){
+                    return true;
+                }
+            }
+            System.out.println("N passou cg2 "+get_current_token().get_lexema());
             return false;
         }else if(acceptVazio("<cg2>")){
             System.out.println("Passou Vazio CG2 "+get_current_token().get_lexema());
@@ -859,9 +901,34 @@ public class Sintatico{
             return false;
         }
     }    
-
-    private boolean variavelLinha(String tipo, String nome, String linha) {
-        return false;
+    
+    //<variavelinha> ::= ',' id <variavelinha> | '?'
+    private boolean variavelLinha(String tipo, String nome, String linha){
+        System.out.println("Entrou variaveLinha");
+        if(escopo==null){
+            sem.add_var_globals_tab(new Item(nome, tipo), linha);
+        }else{
+            System.out.println("Nome escopo variavel: "+escopo);
+            sem.add_variavel_tab(new Item(nome, tipo, escopo), linha, escopo);
+        }
+        if(get_current_token().get_lexema().equals(",")){
+            ahead_token();
+            System.out.println("Passou virgula "+get_current_token().get_padrao());
+            if(accept("ID","<variavelinha>")){
+                nome=get_current_token().get_lexema();    
+                linha=get_current_token().get_linha();    
+                ahead_token();
+                System.out.println("Passou ID "+get_current_token().get_lexema());
+                if(variavelLinha(tipo, nome, linha)){
+                    return true;
+                }
+            }
+            return false;
+        }else if(get_current_token().get_lexema().equals(";")){
+            return true;
+        }else{        
+            return false;
+        }
     }
     /*
     <argumentos> ::= <exp> <argumentos2> | <valorL> <argumentos2> |
